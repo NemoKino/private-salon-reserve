@@ -1,0 +1,55 @@
+[
+  {
+    "id": "event-001",
+    "title": "Bar Moonlight",
+    "thumbnail": "/images/sample-bar.jpg",
+    "frequency": "毎週金曜 22:00",
+    "status": "recruiting",
+    "tags": ["Bar", "RP", "初心者歓迎"],
+    "description": "落ち着いた雰囲気のBarロールプレイイベント。接客スタッフを募集中です。",
+    "detail": {
+      "heroImage": "/images/sample-bar-hero.jpg",
+      "longDescription": "Bar Moonlightは、VRChat内で毎週金曜日に開催しているBarイベントです。\nジャズの流れる落ち着いた空間で、お客様に癒やしを提供しています。\n現在、カウンターで接客を行ってくれるキャストを2名募集しています。\n\nお酒の知識は不要です。お話を聞くのが好きな方、RPを楽しみたい方、ぜひ一緒に作り上げましょう。",
+      "requirements": [
+        "毎週金曜 21:30〜24:00 に参加できる方（シフト相談可）",
+        "VRChatのプレイ時間が50時間以上の方",
+        "Discordでの連絡が取れる方",
+        "接客RPに興味がある方（経験不問）"
+      ],
+      "schedule": "毎週金曜日 22:00 OPEN - 24:00 CLOSE",
+      "location": "Bar Moonlight (Friend+)"
+    },
+    "organizer": {
+      "name": "MoonOwner",
+      "icon": "/images/organizer-icon.jpg",
+      "twitterUrl": "https://twitter.com/example"
+    },
+    "isFeaturedTop": true
+  },
+  {
+    "id": "event-002",
+    "title": "Club NEON",
+    "thumbnail": "/images/sample-club.jpg",
+    "frequency": "隔週土曜 21:00",
+    "status": "recruiting",
+    "tags": ["Club", "Music", "Dancers"],
+    "description": "サイバーパンクな空間で踊れるクラブイベント。ダンサーとセキュリティ募集。",
+    "detail": {
+      "heroImage": "/images/sample-club-hero.jpg",
+      "longDescription": "Club NEONは、最新のEDMとサイバーパンクなワールドで盛り上がるクラブイベントです。\nフロアを盛り上げるダンサーと、イベントの進行を守るセキュリティスタッフを募集しています。",
+      "requirements": [
+        "隔週土曜に参加可能な方",
+        "フルトラッキング環境（ダンサーのみ）",
+        "イベントの雰囲気を大切にできる方"
+      ],
+      "schedule": "隔週土曜日 21:00 - 25:00",
+      "location": "Club NEON World"
+    },
+    "organizer": {
+      "name": "DJ_Neon",
+      "icon": "/images/organizer-icon-2.jpg",
+      "twitterUrl": "https://twitter.com/example_club"
+    },
+    "isFeaturedTop": false
+  }
+]
