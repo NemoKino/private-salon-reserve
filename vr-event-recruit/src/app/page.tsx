@@ -1,16 +1,20 @@
 import Link from 'next/link';
 import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import Hero from '@/components/home/Hero';
+import Footer from '@/components/layout/Footer';
 import EventCard from '@/components/events/EventCard';
 import Button from '@/components/ui/Button';
-import events from '@/data/events.json';
+import { getEvents } from '@/utils/events'; // Use dynamic fetch
 import { Event } from '@/types';
 
-// Featured events
-const featuredEvents = events.filter((e) => e.isFeaturedTop);
+export const revalidate = 0; // Disable cache for immediate updates
 
 export default function Home() {
+  const events = getEvents();
+  const featuredEvents = events.filter(e => e.isFeaturedTop);
+  // If no featured events, just show recent 3
+  const displayEvents = featuredEvents.length > 0 ? featuredEvents : events.slice(0, 3);
+
   return (
     <>
       <Header />
@@ -26,7 +30,7 @@ export default function Home() {
           </div>
 
           <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '2rem' }}>
-            {featuredEvents.map((event) => (
+            {displayEvents.map((event) => (
               <EventCard key={event.id} event={event as Event} />
             ))}
           </div>

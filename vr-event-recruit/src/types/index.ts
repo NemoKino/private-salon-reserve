@@ -1,10 +1,19 @@
 export type EventStatus = 'recruiting' | 'closed' | 'ended';
 
+export type ScheduleType = 'daily' | 'weekly' | 'biweekly' | 'monthly' | 'oneoff' | 'irregular' | 'other';
+export type DayOfWeek = 'Sun' | 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri' | 'Sat';
+
 export interface EventDetail {
     heroImage: string;
     longDescription: string;
     requirements: string[];
-    schedule: string;
+    schedule: {
+        text: string;
+        type: ScheduleType;
+        days?: DayOfWeek[];
+        dateOfMonth?: number;
+    };
+    galleryImages?: string[];
     location: string;
 }
 

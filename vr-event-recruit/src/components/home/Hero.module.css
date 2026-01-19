@@ -1,56 +1,68 @@
 .hero {
     position: relative;
-    height: 80vh;
-    min-height: 600px;
+    /* height: 80vh; - Removed to prevent fixed height issues */
+    min-height: 80vh;
+    /* Allow growth */
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
     overflow: hidden;
     color: var(--color-surface);
+    padding: var(--spacing-2xl) 0;
+    /* Add vertical padding */
 }
 
-.background {
+/* Base Aurora Container removed in favor of Vanta.js */
+.hero::before {
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1;
-    background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);
-    background-image:
-        radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 1) 0, transparent 50%),
-        radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 1) 0, transparent 50%),
-        radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 1) 0, transparent 50%);
+    z-index: 10;
+    background: radial-gradient(circle at center, transparent 0%, rgba(15, 23, 42, 0.8) 100%);
+    pointer-events: none;
 }
 
+/* Content */
 .content {
     position: relative;
-    z-index: 10;
-    padding: 0 var(--spacing-md);
-    animation: fadeIn 1s ease-out;
+    z-index: 20;
+    text-align: center;
+    max-width: 800px;
+    width: 100%;
+    padding: 2rem;
+    animation: fadeIn 1.5s ease-out;
 }
 
 .title {
     font-size: 3.5rem;
     font-weight: 800;
     line-height: 1.2;
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: 1.5rem;
+    color: white;
+    /* Changed for dark background */
     letter-spacing: -0.05em;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .highlight {
     background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 20px rgba(56, 189, 248, 0.5));
 }
 
 .description {
     font-size: 1.25rem;
     line-height: 1.8;
-    color: #94a3b8;
-    /* Slate 400 */
-    margin-bottom: var(--spacing-2xl);
+    color: #cbd5e1;
+    /* Slate 300 for readability on dark */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    margin-bottom: 3rem;
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
@@ -60,6 +72,35 @@
     display: flex;
     gap: var(--spacing-md);
     justify-content: center;
+}
+
+/* Animations */
+@keyframes float {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    33% {
+        transform: translate(30px, -50px) scale(1.1);
+    }
+
+    66% {
+        transform: translate(-20px, 20px) scale(0.9);
+    }
+
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+}
+
+@keyframes twinkle {
+    from {
+        background-position: 0 0;
+    }
+
+    to {
+        background-position: 20px 20px;
+    }
 }
 
 @keyframes fadeIn {
@@ -75,16 +116,39 @@
 }
 
 @media (max-width: 768px) {
+    .hero {
+        min-height: 100vh;
+        /* Full screen on mobile */
+        padding: 4rem 1rem;
+        /* Adjust padding */
+    }
+
+    .content {
+        padding: 1.5rem;
+        /* Reduce padding slightly */
+    }
+
     .title {
-        font-size: 2.5rem;
+        font-size: 2.25rem;
+        /* Smaller font for mobile */
+        margin-bottom: 1rem;
     }
 
     .description {
         font-size: 1rem;
+        margin-bottom: 2rem;
+        padding: 0 1rem;
+        /* Ensure text doesn't hit edges */
     }
 
     .actions {
         flex-direction: column;
-        padding: 0 var(--spacing-xl);
+        padding: 0;
+        /* Remove horizontal padding that constrained buttons */
+        gap: 1rem;
+        width: 100%;
+        max-width: 320px;
+        /* Limit button width */
+        margin: 0 auto;
     }
 }

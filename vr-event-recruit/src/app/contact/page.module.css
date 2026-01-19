@@ -1,0 +1,50 @@
+.container {
+    padding: 6rem 1rem;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    background: linear-gradient(135deg, #FF2D55 0%, #B00020 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.card {
+    background: white;
+    padding: 3rem;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-md);
+}
+
+.text {
+    font-size: 1.125rem;
+    color: var(--color-text-secondary);
+    line-height: 1.8;
+    margin-bottom: 2.5rem;
+}
+
+
+
+.buttonWrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.faqSection {
+    margin-top: 4rem;
+    text-align: left;
+}
+
+.faqTitle {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: var(--color-text-primary);
+}

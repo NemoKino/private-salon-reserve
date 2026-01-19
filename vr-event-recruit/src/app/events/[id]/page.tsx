@@ -1,27 +1,60 @@
 import { notFound } from 'next/navigation';
+import ShareButtons from '@/components/events/ShareButtons';
 import Image from 'next/image';
 import Link from 'next/link';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import Button from '@/components/ui/Button';
-import events from '@/data/events.json';
+import { getEvents, getEventById } from '@/utils/events';
 import { Event } from '@/types';
+import EventGallery from '@/components/events/EventGallery';
 import styles from './page.module.css';
 
 interface Props {
     params: Promise<{ id: string }>;
 }
 
-// Generate static params for all events
+export const revalidate = 0;
+export const dynamicParams = true; // Allow new IDs not generated at build time
+
+// Generate static params for all known events (optional for dynamic but good for existing pages)
 export async function generateStaticParams() {
+    const events = getEvents();
     return events.map((event) => ({
         id: event.id,
     }));
 }
 
+export async function generateMetadata(props: Props) {
+    const params = await props.params;
+    const event = getEventById(params.id);
+
+    if (!event) {
+        return {
+            title: 'Event Not Found',
+        };
+    }
+
+    return {
+        title: event.title,
+        description: event.description,
+        openGraph: {
+            title: event.title,
+            description: event.description,
+            images: [event.detail.heroImage || event.thumbnail],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: event.title,
+            description: event.description,
+            images: [event.detail.heroImage || event.thumbnail],
+        },
+    };
+}
+
 export default async function EventDetailPage(props: Props) {
     const params = await props.params;
-    const event = events.find((e) => e.id === params.id) as Event | undefined;
+    const event = getEventById(params.id);
 
     if (!event) {
         notFound();
@@ -56,8 +89,18 @@ export default async function EventDetailPage(props: Props) {
                 <div className={`container ${styles.layout}`}>
                     {/* Main Content */}
                     <div className={styles.contentColumn}>
+
+
                         <section className={styles.section}>
                             <h2 className={styles.sectionTitle}>イベントについて</h2>
+
+                            {/* Gallery or Single Image */}
+                            {event.detail.galleryImages && event.detail.galleryImages.length > 0 ? (
+                                <div className="mb-6">
+                                    <EventGallery images={event.detail.galleryImages} title={event.title} />
+                                </div>
+                            ) : null}
+
                             <p className={styles.text}>{event.detail.longDescription}</p>
                         </section>
 
@@ -75,7 +118,7 @@ export default async function EventDetailPage(props: Props) {
                             <dl className={styles.infoList}>
                                 <div className={styles.infoItem}>
                                     <dt>開催日時</dt>
-                                    <dd>{event.detail.schedule}</dd>
+                                    <dd>{event.detail.schedule.text}</dd>
                                 </div>
                                 <div className={styles.infoItem}>
                                     <dt>開催場所</dt>

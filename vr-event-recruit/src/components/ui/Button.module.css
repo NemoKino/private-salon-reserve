@@ -17,13 +17,16 @@
 
 /* Variants */
 .primary {
-    background-color: var(--color-text-main);
-    color: var(--color-surface);
+    background-color: var(--color-accent-hover);
+    /* Sky 500 - Visible on dark & light */
+    color: #ffffff;
     box-shadow: var(--shadow-md);
+    border: 1px solid transparent;
 }
 
 .primary:hover {
-    background-color: var(--color-secondary);
+    background-color: #0284c7;
+    /* Sky 600 */
     box-shadow: var(--shadow-lg);
     transform: translateY(-1px);
 }
@@ -55,8 +58,8 @@
 }
 
 .ghost:hover {
-    color: var(--color-text-main);
-    background-color: rgba(0, 0, 0, 0.05);
+    color: var(--color-accent-hover);
+    background-color: rgba(56, 189, 248, 0.1);
 }
 
 /* Sizes */
@@ -76,4 +79,11 @@
     height: 56px;
     padding: 0 2rem;
     font-size: 1.125rem;
+}
+
+/* Disabled State */
+.button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
 }

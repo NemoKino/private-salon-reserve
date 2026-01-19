@@ -179,6 +179,8 @@
     .layout {
         grid-template-columns: 1fr;
         gap: var(--spacing-xl);
+        padding: 0 var(--spacing-md);
+        /* Add horizontal padding */
     }
 
     .sidebar {
@@ -191,5 +193,9 @@
 
     .title {
         font-size: 1.75rem;
+    }
+
+    .coverOverlay {
+        padding: 0 var(--spacing-md) var(--spacing-xl);
     }
 }

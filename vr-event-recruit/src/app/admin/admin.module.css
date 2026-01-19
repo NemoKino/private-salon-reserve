@@ -1,0 +1,160 @@
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: var(--spacing-xl) var(--spacing-md);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-2xl);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 2px solid var(--color-border);
+}
+
+.title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text-main);
+}
+
+/* Table Styles */
+.tableWrapper {
+    background-color: var(--color-surface);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.th {
+    background-color: var(--color-background);
+    padding: var(--spacing-md);
+    text-align: left;
+    font-weight: 600;
+    color: var(--color-text-sub);
+    border-bottom: 1px solid var(--color-border);
+    font-size: 0.875rem;
+}
+
+.td {
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text-main);
+}
+
+.row:last-child .td {
+    border-bottom: none;
+}
+
+.row:hover {
+    background-color: #f8fafc;
+}
+
+.actions {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.editButton {
+    background-color: var(--color-primary);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: background-color 0.2s;
+    text-decoration: none;
+}
+
+.editButton:hover {
+    background-color: var(--color-primary-hover);
+}
+
+.deleteButton {
+    background-color: #ef4444;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.deleteButton:hover {
+    opacity: 0.8;
+}
+
+/* Form Styles */
+.form {
+    background-color: var(--color-surface);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.formGroup {
+    margin-bottom: var(--spacing-lg);
+}
+
+.label {
+    display: block;
+    margin-bottom: var(--spacing-sm);
+    font-weight: 600;
+    color: var(--color-text-main);
+}
+
+.input,
+.textarea,
+.select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    background-color: #fff;
+}
+
+.textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.helper {
+    font-size: 0.875rem;
+    color: var(--color-text-sub);
+    margin-top: 0.25rem;
+}
+
+.buttonGroup {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-xl);
+    justify-content: flex-end;
+}
+
+.status {
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.status_recruiting {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+.status_closed {
+    background-color: #f1f5f9;
+    color: #475569;
+}

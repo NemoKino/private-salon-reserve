@@ -1,0 +1,113 @@
+.container {
+    padding: 6rem 1rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.section {
+    margin-bottom: 5rem;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    text-align: center;
+    background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.subTitle {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: var(--color-text-primary);
+    border-bottom: 2px solid var(--color-border);
+    padding-bottom: 0.5rem;
+    display: inline-block;
+}
+
+.text {
+    font-size: 1.125rem;
+    color: var(--color-text-secondary);
+    line-height: 1.9;
+    margin-bottom: 1.5rem;
+}
+
+.profileCard {
+    background: white;
+    padding: 2.5rem;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.adminInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.adminName {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.adminImageWrapper {
+    width: 100%;
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: center;
+}
+
+.adminImage {
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    object-fit: cover;
+}
+
+.link {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.link:hover {
+    text-decoration: underline;
+}
+
+.avatarList {
+    background-color: var(--color-bg-secondary);
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+}
+
+.avatarTitle {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.avatars {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.avatarTag {
+    background: white;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    font-size: 0.9375rem;
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border);
+    font-weight: 500;
+}

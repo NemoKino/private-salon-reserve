@@ -1,15 +1,19 @@
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import EventListContainer from '@/components/events/EventListContainer';
-import events from '@/data/events.json';
+import { getEvents } from '@/utils/events';
 import { Event } from '@/types';
 
+export const revalidate = 0;
+
 export const metadata = {
-    title: 'イベント一覧 | VR Event Recruit',
+    title: 'イベント一覧 | VR CAST LINK',
     description: '現在キャスト募集中のVRChatイベント一覧',
 };
 
 export default function ListPage() {
+    const events = getEvents();
+
     return (
         <>
             <Header />
@@ -19,7 +23,7 @@ export default function ListPage() {
                     <p className="subtitle">あなたにぴったりのイベントを見つけよう</p>
                 </div>
 
-                <EventListContainer events={events as Event[]} />
+                <EventListContainer events={events} />
             </main>
             <Footer />
         </>

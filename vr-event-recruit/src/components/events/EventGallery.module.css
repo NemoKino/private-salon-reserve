@@ -1,0 +1,139 @@
+.container {
+    --gallery-height: 400px;
+    --thumb-size: 80px;
+    --thumb-gap: 0.5rem;
+
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Main Display Area */
+.mainDisplay {
+    position: relative;
+    width: 100%;
+    height: var(--gallery-height);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background-color: var(--color-surface);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--color-border);
+}
+
+.imageWrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.image {
+    object-fit: cover;
+}
+
+/* Navigation Buttons */
+.navButton {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: rgba(15, 23, 42, 0.6);
+    /* Slate 900 with opacity */
+    color: white;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    z-index: 10;
+    backdrop-filter: blur(4px);
+}
+
+.navButton:hover {
+    background-color: rgba(15, 23, 42, 0.8);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.prevButton {
+    left: 1rem;
+}
+
+.nextButton {
+    right: 1rem;
+}
+
+/* Thumbnails */
+.thumbnails {
+    display: flex;
+    gap: var(--thumb-gap);
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
+}
+
+.thumbnails::-webkit-scrollbar {
+    height: 6px;
+}
+
+.thumbnails::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.thumbnails::-webkit-scrollbar-thumb {
+    background-color: var(--color-border);
+    border-radius: 3px;
+}
+
+.thumbnailButton {
+    position: relative;
+    flex: 0 0 var(--thumb-size);
+    height: var(--thumb-size);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+    opacity: 0.7;
+}
+
+.thumbnailButton:hover {
+    opacity: 1;
+}
+
+.thumbnailButton.active {
+    border-color: var(--color-accent);
+    opacity: 1;
+    box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.3);
+}
+
+.thumbImage {
+    object-fit: cover;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        --gallery-height: 250px;
+        --thumb-size: 60px;
+    }
+
+    .navButton {
+        width: 32px;
+        height: 32px;
+        background-color: rgba(15, 23, 42, 0.4);
+        /* More transparent */
+    }
+
+    .prevButton {
+        left: 0.5rem;
+    }
+
+    .nextButton {
+        right: 0.5rem;
+    }
+}

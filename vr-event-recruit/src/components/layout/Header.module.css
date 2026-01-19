@@ -1,11 +1,11 @@
 .header {
     height: var(--header-height);
+    background-color: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--color-border);
     position: sticky;
     top: 0;
-    z-index: 50;
-    background-color: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--color-border);
+    z-index: 100;
 }
 
 .inner {
@@ -16,24 +16,96 @@
 }
 
 .logo {
-    font-weight: 700;
+    font-weight: 800;
     font-size: 1.25rem;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.025em;
+    color: var(--color-text-main);
 }
 
 .nav {
     display: flex;
+    gap: var(--spacing-lg);
     align-items: center;
-    gap: var(--spacing-md);
 }
 
 .link {
-    font-size: 0.9rem;
-    color: var(--color-text-sub);
+    font-size: 0.9375rem;
     font-weight: 500;
+    color: var(--color-text-sub);
     transition: color 0.2s;
 }
 
 .link:hover {
-    color: var(--color-text-main);
+    color: var(--color-primary);
+}
+
+/* Hamburger Menu styles */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 2rem;
+    height: 2rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 101;
+}
+
+.hamburger span {
+    width: 2rem;
+    height: 0.25rem;
+    background: var(--color-text-main);
+    border-radius: 10px;
+    transition: all 0.3s linear;
+    position: relative;
+    transform-origin: 1px;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+    .hamburger {
+        display: flex;
+    }
+
+    .nav {
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        background-color: rgba(255, 255, 255, 0.98);
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 100vh;
+        width: 100%;
+        gap: 2rem;
+        transition: transform 0.3s ease-in-out;
+        transform: translateX(100%);
+    }
+
+    .nav.open {
+        display: flex;
+        transform: translateX(0);
+    }
+
+    .link {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--color-text-main);
+    }
+
+    /* Hamburger Animation */
+    .hamburger.active span:first-child {
+        transform: rotate(45deg);
+    }
+
+    .hamburger.active span:nth-child(2) {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+
+    .hamburger.active span:nth-child(3) {
+        transform: rotate(-45deg);
+    }
 }

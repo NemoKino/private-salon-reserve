@@ -2,8 +2,27 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'VR Event Recruit | キャスト募集サイト',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
+  title: {
+    default: 'VR CAST LINK | キャスト募集サイト',
+    template: '%s | VR CAST LINK',
+  },
   description: 'VRChat内の継続イベントによるキャスト募集掲示板。ログイン不要・Twitter誘導型。',
+  openGraph: {
+    title: 'VR CAST LINK | キャスト募集サイト',
+    description: 'VRChat内の継続イベントによるキャスト募集掲示板。',
+    url: '/',
+    siteName: 'VR CAST LINK',
+    locale: 'ja_JP',
+    type: 'website',
+    images: ['/images/sample-club-hero.jpg'], // Default OGP Image
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'VR CAST LINK | キャスト募集サイト',
+    description: 'VRChat内の継続イベントによるキャスト募集掲示板。',
+    images: ['/images/sample-club-hero.jpg'],
+  },
 };
 
 export default function RootLayout({

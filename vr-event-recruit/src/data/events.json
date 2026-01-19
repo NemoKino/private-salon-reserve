@@ -5,10 +5,14 @@
     "thumbnail": "/images/sample-bar.jpg",
     "frequency": "毎週金曜 22:00",
     "status": "recruiting",
-    "tags": ["Bar", "RP", "初心者歓迎"],
+    "tags": [
+      "Bar",
+      "RP",
+      "初心者歓迎"
+    ],
     "description": "落ち着いた雰囲気のBarロールプレイイベント。接客スタッフを募集中です。",
     "detail": {
-      "heroImage": "/images/sample-bar-hero.jpg",
+      "heroImage": "/uploads/1768841430694_2026-01-10_211803.png",
       "longDescription": "Bar Moonlightは、VRChat内で毎週金曜日に開催しているBarイベントです。\nジャズの流れる落ち着いた空間で、お客様に癒やしを提供しています。\n現在、カウンターで接客を行ってくれるキャストを2名募集しています。\n\nお酒の知識は不要です。お話を聞くのが好きな方、RPを楽しみたい方、ぜひ一緒に作り上げましょう。",
       "requirements": [
         "毎週金曜 21:30〜24:00 に参加できる方（シフト相談可）",
@@ -16,7 +20,19 @@
         "Discordでの連絡が取れる方",
         "接客RPに興味がある方（経験不問）"
       ],
-      "schedule": "毎週金曜日 22:00 OPEN - 24:00 CLOSE",
+      "schedule": {
+        "text": "毎週金曜 22:00",
+        "type": "weekly",
+        "days": [
+          "Fri"
+        ]
+      },
+      "galleryImages": [
+        "/images/sample-bar-hero.jpg",
+        "/images/sample-bar.jpg",
+        "/images/sample-club-hero.jpg",
+        "/images/sample-club.jpg"
+      ],
       "location": "Bar Moonlight (Friend+)"
     },
     "organizer": {
@@ -32,7 +48,11 @@
     "thumbnail": "/images/sample-club.jpg",
     "frequency": "隔週土曜 21:00",
     "status": "recruiting",
-    "tags": ["Club", "Music", "Dancers"],
+    "tags": [
+      "Club",
+      "Music",
+      "Dancers"
+    ],
     "description": "サイバーパンクな空間で踊れるクラブイベント。ダンサーとセキュリティ募集。",
     "detail": {
       "heroImage": "/images/sample-club-hero.jpg",
@@ -42,13 +62,120 @@
         "フルトラッキング環境（ダンサーのみ）",
         "イベントの雰囲気を大切にできる方"
       ],
-      "schedule": "隔週土曜日 21:00 - 25:00",
+      "schedule": {
+        "text": "隔週土曜日 21:00 - 25:00",
+        "type": "biweekly",
+        "days": [
+          "Sat"
+        ]
+      },
+      "galleryImages": [
+        "/images/sample-club-hero.jpg",
+        "/images/sample-club.jpg",
+        "/images/sample-bar-hero.jpg"
+      ],
       "location": "Club NEON World"
     },
     "organizer": {
       "name": "DJ_Neon",
       "icon": "/images/organizer-icon-2.jpg",
       "twitterUrl": "https://twitter.com/example_club"
+    },
+    "isFeaturedTop": true
+  },
+  {
+    "id": "event-1767979175274",
+    "title": "TEST",
+    "thumbnail": "/images/sample-bar.jpg",
+    "frequency": "毎週金曜 22:00",
+    "status": "recruiting",
+    "tags": [
+      "Bar"
+    ],
+    "description": "TEST用",
+    "detail": {
+      "heroImage": "/images/sample-bar-hero.jpg",
+      "longDescription": "http://localhost:3000/admin/new ",
+      "requirements": [],
+      "schedule": {
+        "text": "",
+        "type": "weekly"
+      },
+      "galleryImages": [],
+      "location": "https://x.com/tmt_massage"
+    },
+    "organizer": {
+      "name": "根本希乃",
+      "icon": "/images/organizer-icon.jpg",
+      "twitterUrl": "https://x.com/tmt_massage"
+    },
+    "isFeaturedTop": false
+  },
+  {
+    "id": "event-1768831214853",
+    "title": "更新テスト",
+    "thumbnail": "/images/sample-bar.jpg",
+    "frequency": "毎週金曜 22:00",
+    "status": "recruiting",
+    "tags": [
+      "Bar"
+    ],
+    "description": "Created by Browser Agent",
+    "detail": {
+      "heroImage": "/uploads/1768841494962_459248.jpg",
+      "longDescription": "Created by Browser Agent",
+      "requirements": [
+        "Req 1",
+        "Req 2"
+      ],
+      "schedule": {
+        "text": "毎週金曜 22:00",
+        "type": "daily",
+        "days": [
+          "Mon"
+        ]
+      },
+      "galleryImages": [],
+      "location": "Test Room"
+    },
+    "organizer": {
+      "name": "Agent",
+      "icon": "/images/organizer-icon.jpg",
+      "twitterUrl": "https://twitter.com/"
+    },
+    "isFeaturedTop": false
+  },
+  {
+    "id": "event-1768841889759",
+    "title": "作成TEST",
+    "thumbnail": "/uploads/1768841778172_VRChat_2026-01-11_21-36-23.557_1920x1080.png",
+    "frequency": "毎日　2：00",
+    "status": "recruiting",
+    "tags": [
+      "VRChat",
+      "PR",
+      "book",
+      "集会"
+    ],
+    "description": "これはTESTです。",
+    "detail": {
+      "heroImage": "/uploads/1768841749048_maruma-ku-illust14.png",
+      "longDescription": "123",
+      "requirements": [
+        "特になし"
+      ],
+      "schedule": {
+        "text": "毎日　2：00",
+        "type": "daily",
+        "days": []
+      },
+      "galleryImages": [],
+      "location": "グルプラ"
+    },
+    "organizer": {
+      "name": "俺！",
+      "icon": "/images/organizer-icon.jpg",
+      "twitterUrl": "https://twitter.com/"
     },
     "isFeaturedTop": false
   }

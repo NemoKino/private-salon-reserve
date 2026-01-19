@@ -4,11 +4,13 @@ import styles from './Button.module.css';
 interface ButtonProps {
     children: React.ReactNode;
     href?: string;
-    variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
+    variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
     size?: 'sm' | 'md' | 'lg';
     className?: string;
     onClick?: () => void;
     external?: boolean;
+    type?: 'button' | 'submit' | 'reset';
+    disabled?: boolean;
 }
 
 export default function Button({
@@ -19,6 +21,8 @@ export default function Button({
     className = '',
     onClick,
     external = false,
+    type = 'button',
+    disabled = false,
 }: ButtonProps) {
     const rootClassName = `${styles.button} ${styles[variant]} ${styles[size]} ${className}`;
 
@@ -38,7 +42,12 @@ export default function Button({
     }
 
     return (
-        <button className={rootClassName} onClick={onClick}>
+        <button
+            type={type}
+            className={rootClassName}
+            onClick={onClick}
+            disabled={disabled}
+        >
             {children}
         </button>
     );

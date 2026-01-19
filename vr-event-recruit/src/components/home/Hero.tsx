@@ -1,5 +1,6 @@
 import Button from '../ui/Button';
 import styles from './Hero.module.css';
+import CyberBackground from './CyberBackground';
 
 export default function Hero() {
     return (
@@ -19,12 +20,12 @@ export default function Hero() {
                     <Button href="/list" size="lg">
                         募集中イベントを見る
                     </Button>
-                    <Button href="https://docs.google.com/forms" external variant="outline" size="lg">
-                        イベントを掲載する
+                    <Button href="/organizer" variant="secondary" size="lg">
+                        イベント掲載について
                     </Button>
                 </div>
             </div>
-            <div className={styles.background} />
+            <CyberBackground />
         </section>
     );
 }
