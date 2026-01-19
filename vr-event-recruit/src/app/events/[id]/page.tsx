@@ -19,7 +19,7 @@ export const dynamicParams = true; // Allow new IDs not generated at build time
 
 // Generate static params for all known events (optional for dynamic but good for existing pages)
 export async function generateStaticParams() {
-    const events = getEvents();
+    const events = await getEvents();
     return events.map((event) => ({
         id: event.id,
     }));
@@ -27,7 +27,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata(props: Props) {
     const params = await props.params;
-    const event = getEventById(params.id);
+    const event = await getEventById(params.id);
 
     if (!event) {
         return {
@@ -54,7 +54,7 @@ export async function generateMetadata(props: Props) {
 
 export default async function EventDetailPage(props: Props) {
     const params = await props.params;
-    const event = getEventById(params.id);
+    const event = await getEventById(params.id);
 
     if (!event) {
         notFound();
@@ -94,12 +94,13 @@ export default async function EventDetailPage(props: Props) {
                         <section className={styles.section}>
                             <h2 className={styles.sectionTitle}>イベントについて</h2>
 
-                            {/* Gallery or Single Image */}
-                            {event.detail.galleryImages && event.detail.galleryImages.length > 0 ? (
-                                <div className="mb-6">
-                                    <EventGallery images={event.detail.galleryImages} title={event.title} />
-                                </div>
-                            ) : null}
+                            {/* Gallery (Hero + Extras) */}
+                            <div className="mb-6">
+                                <EventGallery
+                                    images={[event.detail.heroImage, ...(event.detail.galleryImages || [])].filter(Boolean)}
+                                    title={event.title}
+                                />
+                            </div>
 
                             <p className={styles.text}>{event.detail.longDescription}</p>
                         </section>

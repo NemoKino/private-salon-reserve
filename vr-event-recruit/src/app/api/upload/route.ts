@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import path from 'path';
+import cloudinary from '@/lib/cloudinary';
+import { Readable } from 'stream';
 
 export async function POST(request: Request) {
     try {
@@ -14,23 +14,24 @@ export async function POST(request: Request) {
             );
         }
 
-        const buffer = Buffer.from(await file.arrayBuffer());
-        const filename = Date.now() + '_' + file.name.replaceAll(" ", "_");
+        const arrayBuffer = await file.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
 
-        // Ensure upload directory exists
-        const uploadDir = path.join(process.cwd(), 'public/uploads');
-        try {
-            await mkdir(uploadDir, { recursive: true });
-        } catch (e) {
-            // Ignore error if it exists
-        }
-
-        const filepath = path.join(uploadDir, filename);
-        await writeFile(filepath, buffer);
+        // Upload to Cloudinary
+        const uploadResult: any = await new Promise((resolve, reject) => {
+            const uploadStream = cloudinary.uploader.upload_stream(
+                { folder: 'vr-event-recruit' },
+                (error, result) => {
+                    if (error) reject(error);
+                    else resolve(result);
+                }
+            );
+            Readable.from(buffer).pipe(uploadStream);
+        });
 
         return NextResponse.json({
             message: 'Success',
-            url: `/uploads/${filename}`
+            url: uploadResult.secure_url
         });
     } catch (error) {
         console.error('Error uploading file:', error);

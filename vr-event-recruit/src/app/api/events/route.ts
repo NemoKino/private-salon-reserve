@@ -1,23 +1,30 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+import { sql } from '@/lib/db';
 import { Event } from '@/types';
-
-const dataFilePath = path.join(process.cwd(), 'src/data/events.json');
-
-// Helper to read events
-function getEvents(): Event[] {
-    const jsonData = fs.readFileSync(dataFilePath, 'utf8');
-    return JSON.parse(jsonData);
-}
 
 // GET: List all events
 export async function GET() {
     try {
-        const events = getEvents();
+        // Prevent caching for real-time updates
+        const { rows } = await sql`SELECT * FROM events ORDER BY created_at DESC`;
+
+        const events: Event[] = rows.map((row: any) => ({
+            id: row.id,
+            title: row.title,
+            thumbnail: row.thumbnail,
+            frequency: row.frequency,
+            status: row.status,
+            tags: row.tags,
+            description: row.description,
+            detail: row.detail,
+            organizer: row.organizer,
+            isFeaturedTop: row.is_featured_top,
+        }));
+
         return NextResponse.json(events);
     } catch (error) {
-        return NextResponse.json({ error: 'Failed to read events' }, { status: 500 });
+        console.error('Database error:', error);
+        return NextResponse.json({ error: 'Failed to fetch events' }, { status: 500 });
     }
 }
 
@@ -25,17 +32,32 @@ export async function GET() {
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const events = getEvents();
 
-        // Simple validation or default values could go here
+        // Simple ID generation (could use UUID)
+        const id = `event-${Date.now()}`;
+        const isFeaturedTop = body.isFeaturedTop || false;
+
+        await sql`
+            INSERT INTO events (id, title, thumbnail, frequency, status, tags, description, detail, organizer, is_featured_top)
+            VALUES (
+                ${id}, 
+                ${body.title}, 
+                ${body.thumbnail}, 
+                ${body.frequency}, 
+                ${body.status}, 
+                ${body.tags}, 
+                ${body.description}, 
+                ${body.detail}::jsonb, 
+                ${body.organizer}::jsonb, 
+                ${isFeaturedTop}
+            )
+        `;
+
         const newEvent: Event = {
-            id: `event-${Date.now()}`, // Generate simple ID
+            id,
             ...body,
-            isFeaturedTop: body.isFeaturedTop || false,
+            isFeaturedTop,
         };
-
-        const updatedEvents = [...events, newEvent];
-        fs.writeFileSync(dataFilePath, JSON.stringify(updatedEvents, null, 2), 'utf8');
 
         return NextResponse.json(newEvent, { status: 201 });
     } catch (error) {

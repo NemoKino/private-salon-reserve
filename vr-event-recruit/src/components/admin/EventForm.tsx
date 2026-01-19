@@ -21,7 +21,7 @@ interface FormData {
     location: string;
     organizerName: string;
     twitterUrl: string;
-    galleryImagesText: string;
+    galleryImages: string[];
     requirementsText: string;
 }
 
@@ -49,7 +49,7 @@ export default function EventForm({ initialData, onSubmit, isEditing = false }: 
         location: '',
         organizerName: '',
         twitterUrl: 'https://twitter.com/',
-        galleryImagesText: '',
+        galleryImages: [], // Changed to array
         requirementsText: '',
     });
 
@@ -70,7 +70,7 @@ export default function EventForm({ initialData, onSubmit, isEditing = false }: 
                 location: initialData.detail.location,
                 organizerName: initialData.organizer.name,
                 twitterUrl: initialData.organizer.twitterUrl,
-                galleryImagesText: initialData.detail.galleryImages ? initialData.detail.galleryImages.join('\n') : '',
+                galleryImages: initialData.detail.galleryImages || [], // Load as array
                 requirementsText: initialData.detail.requirements ? initialData.detail.requirements.join('\n') : '',
             });
         }
@@ -89,14 +89,27 @@ export default function EventForm({ initialData, onSubmit, isEditing = false }: 
         }
     };
 
+    // Gallery Image Handlers
+    const handleGalleryImageChange = (index: number, url: string) => {
+        const newImages = [...formData.galleryImages];
+        newImages[index] = url;
+        setFormData({ ...formData, galleryImages: newImages });
+    };
+
+    const handleAddGalleryImage = () => {
+        if (formData.galleryImages.length < 3) {
+            setFormData({ ...formData, galleryImages: [...formData.galleryImages, ''] });
+        }
+    };
+
+    const handleRemoveGalleryImage = (index: number) => {
+        const newImages = formData.galleryImages.filter((_, i) => i !== index);
+        setFormData({ ...formData, galleryImages: newImages });
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-
-        const galleryImages = formData.galleryImagesText
-            .split(/[\n,]/)
-            .map(s => s.trim())
-            .filter(s => s.length > 0);
 
         const requirements = formData.requirementsText
             .split('\n')
@@ -119,7 +132,7 @@ export default function EventForm({ initialData, onSubmit, isEditing = false }: 
                     type: formData.scheduleType,
                     days: formData.scheduleDays,
                 },
-                galleryImages: galleryImages,
+                galleryImages: formData.galleryImages.filter(url => url.length > 0), // Filter empty
                 location: formData.location,
             },
             organizer: {
@@ -240,16 +253,35 @@ export default function EventForm({ initialData, onSubmit, isEditing = false }: 
             </div>
 
             <div className={styles.formGroup}>
-                <label className={styles.label}>ギャラリー画像 (URL) - 複数可</label>
-                <textarea
-                    name="galleryImagesText"
-                    placeholder="/images/photo1.jpg, /images/photo2.jpg"
-                    className={styles.textarea}
-                    value={formData.galleryImagesText}
-                    onChange={handleChange}
-                    style={{ minHeight: '80px' }}
-                />
-                <div className={styles.helper}>カンマ区切りまたは改行で複数の画像URLを指定できます</div>
+                <label className={styles.label}>ギャラリー画像 (最大3枚)</label>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    {formData.galleryImages.map((url, index) => (
+                        <div key={index} style={{ padding: '1rem', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', position: 'relative' }}>
+                            <div style={{ position: 'absolute', top: '0.5rem', right: '0.5rem', zIndex: 10 }}>
+                                <Button
+                                    type="button"
+                                    variant="ghost" // Use ghost or create a danger variant if needed, but styling inline for delete is quick
+                                    onClick={() => handleRemoveGalleryImage(index)}
+                                    style={{ color: '#ef4444', padding: '0.25rem 0.5rem', fontSize: '0.875rem' }}
+                                >
+                                    削除
+                                </Button>
+                            </div>
+                            <ImageUpload
+                                label={`画像 ${index + 1}`}
+                                value={url}
+                                onChange={(newUrl) => handleGalleryImageChange(index, newUrl)}
+                            />
+                        </div>
+                    ))}
+                </div>
+                {formData.galleryImages.length < 3 && (
+                    <div style={{ marginTop: '1rem' }}>
+                        <Button type="button" variant="secondary" onClick={handleAddGalleryImage}>
+                            + 画像を追加
+                        </Button>
+                    </div>
+                )}
             </div>
 
             {/* Status */}

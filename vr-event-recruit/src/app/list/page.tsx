@@ -11,8 +11,8 @@ export const metadata = {
     description: '現在キャスト募集中のVRChatイベント一覧',
 };
 
-export default function ListPage() {
-    const events = getEvents();
+export default async function ListPage() {
+    const events = await getEvents();
 
     return (
         <>

@@ -1,23 +1,47 @@
-import fs from 'fs';
-import path from 'path';
+import { sql } from '@/lib/db';
 import { Event } from '@/types';
 
-const dataFilePath = path.join(process.cwd(), 'src/data/events.json');
-
-export function getEvents(): Event[] {
+export async function getEvents(): Promise<Event[]> {
     try {
-        if (!fs.existsSync(dataFilePath)) {
-            return [];
-        }
-        const jsonData = fs.readFileSync(dataFilePath, 'utf8');
-        return JSON.parse(jsonData);
+        const { rows } = await sql`SELECT * FROM events ORDER BY created_at DESC`;
+        return rows.map((row: any) => ({
+            id: row.id,
+            title: row.title,
+            thumbnail: row.thumbnail,
+            frequency: row.frequency,
+            status: row.status,
+            tags: row.tags,
+            description: row.description,
+            detail: row.detail,
+            organizer: row.organizer,
+            isFeaturedTop: row.is_featured_top,
+        }));
     } catch (error) {
         console.error('Failed to read events:', error);
         return [];
     }
 }
 
-export function getEventById(id: string): Event | undefined {
-    const events = getEvents();
-    return events.find(e => e.id === id);
+export async function getEventById(id: string): Promise<Event | undefined> {
+    try {
+        const { rows } = await sql`SELECT * FROM events WHERE id = ${id}`;
+        if (rows.length === 0) return undefined;
+
+        const row = rows[0];
+        return {
+            id: row.id,
+            title: row.title,
+            thumbnail: row.thumbnail,
+            frequency: row.frequency,
+            status: row.status,
+            tags: row.tags,
+            description: row.description,
+            detail: row.detail,
+            organizer: row.organizer,
+            isFeaturedTop: row.is_featured_top,
+        };
+    } catch (error) {
+        console.error('Failed to get event by id:', error);
+        return undefined;
+    }
 }

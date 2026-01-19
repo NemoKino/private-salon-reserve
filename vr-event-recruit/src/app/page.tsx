@@ -9,8 +9,8 @@ import { Event } from '@/types';
 
 export const revalidate = 0; // Disable cache for immediate updates
 
-export default function Home() {
-  const events = getEvents();
+export default async function Home() {
+  const events = await getEvents();
   const featuredEvents = events.filter(e => e.isFeaturedTop);
   // If no featured events, just show recent 3
   const displayEvents = featuredEvents.length > 0 ? featuredEvents : events.slice(0, 3);
