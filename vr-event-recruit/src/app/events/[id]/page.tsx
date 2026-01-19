@@ -149,6 +149,7 @@ export default async function EventDetailPage(props: Props) {
                                     </a>
                                 </div>
                             </div>
+                            <ShareButtons title={event.title} />
                         </section>
                     </div>
 
