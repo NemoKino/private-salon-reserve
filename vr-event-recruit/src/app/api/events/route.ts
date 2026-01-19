@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { sql } from '@/lib/db';
 import { Event } from '@/types';
 
+export const dynamic = 'force-dynamic';
+
 // GET: List all events
 export async function GET() {
     try {

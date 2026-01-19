@@ -1,9 +1,11 @@
 import { NextResponse } from 'next/server';
 import { sql } from '@/lib/db';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
-    try {
-        await sql`
+  try {
+    await sql`
       CREATE TABLE IF NOT EXISTS events (
         id TEXT PRIMARY KEY,
         title TEXT NOT NULL,
@@ -18,8 +20,8 @@ export async function GET() {
         created_at TIMESTAMP DEFAULT NOW()
       );
     `;
-        return NextResponse.json({ message: 'Table created successfully' });
-    } catch (error) {
-        return NextResponse.json({ error }, { status: 500 });
-    }
+    return NextResponse.json({ message: 'Table created successfully' });
+  } catch (error) {
+    return NextResponse.json({ error }, { status: 500 });
+  }
 }
