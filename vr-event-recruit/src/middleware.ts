@@ -12,9 +12,11 @@ export function middleware(req: NextRequest) {
         const authValue = basicAuth.split(' ')[1];
         const [user, pwd] = atob(authValue).split(':');
 
-        // Hardcoded credentials for local admin usage
-        // In a real app, use environment variables
-        if (user === 'admin' && pwd === 'vrchat') {
+        // Use environment variables for credentials
+        const validUser = process.env.BASIC_AUTH_USER;
+        const validPass = process.env.BASIC_AUTH_PASSWORD;
+
+        if (validUser && validPass && user === validUser && pwd === validPass) {
             return NextResponse.next();
         }
     }
