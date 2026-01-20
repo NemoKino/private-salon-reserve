@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
 import { Event } from '@/types';
@@ -10,6 +11,13 @@ import styles from './admin.module.css';
 export default function AdminDashboard() {
     const [events, setEvents] = useState<Event[]>([]);
     const [loading, setLoading] = useState(true);
+    const router = useRouter();
+
+    const handleLogout = async () => {
+        await fetch('/api/auth/logout', { method: 'POST' });
+        router.push('/login');
+        router.refresh();
+    };
 
     // Modal State
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -65,9 +73,14 @@ export default function AdminDashboard() {
         <div className={styles.container}>
             <div className={styles.header}>
                 <h1 className={styles.title}>管理ダッシュボード</h1>
-                <Button href="/admin/new" variant="primary">
-                    + 新規イベント作成
-                </Button>
+                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                    <Button onClick={handleLogout} variant="outline" size="sm">
+                        ログアウト
+                    </Button>
+                    <Button href="/admin/new" variant="primary">
+                        + 新規イベント作成
+                    </Button>
+                </div>
             </div>
 
             <div className={styles.tableWrapper}>

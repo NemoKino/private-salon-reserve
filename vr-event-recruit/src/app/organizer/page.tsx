@@ -21,17 +21,14 @@ export default function OrganizerPage() {
                         <div className={styles.stepNumber}>STEP 1</div>
                         <h2 className={styles.stepTitle}>お問い合わせ・掲載依頼</h2>
                         <p className={styles.stepText}>
-                            まずは管理者（根本希乃）のX (Twitter) DMにて、イベント掲載希望の旨をご連絡ください。<br />
-                            その際、掲載したい「イベント名」を一緒にお知らせいただけるとスムーズです。
+                            以下の「Googleフォーム」より、イベントの掲載依頼をお送りください。<br />
+                            <br />
+                            フォーム内にて、管理用アカウント (@vr_cast_link) のフォローをお願いしております。<br />
+                            <span style={{ fontSize: '0.875rem', opacity: 0.8 }}>※審査の合否通知をX (Twitter) のDMにてお送りするためです。</span>
                         </p>
-                        <div className={styles.templateBox}>
-                            【DM送信テンプレート】<br />
-                            VR CAST LINKへのイベント掲載を希望します。<br />
-                            イベント名：〇〇〇〇
-                        </div>
                         <div className={styles.buttonWrapper}>
-                            <Button href="https://x.com/tmt_massage" external size="lg" variant="primary">
-                                X (Twitter) DMを送る
+                            <Button href="#" external size="lg" variant="primary">
+                                掲載依頼フォームへ進む
                             </Button>
                         </div>
                     </div>
@@ -39,16 +36,6 @@ export default function OrganizerPage() {
                     {/* STEP 2 */}
                     <div className={styles.step}>
                         <div className={styles.stepNumber}>STEP 2</div>
-                        <h2 className={styles.stepTitle}>詳細情報の入力</h2>
-                        <p className={styles.stepText}>
-                            DMを確認後、管理者よりイベント掲載用の「Googleフォーム」のURLをお送りします。<br />
-                            フォームに従って、イベントの画像、詳細、キャストの募集条件などをご入力ください。
-                        </p>
-                    </div>
-
-                    {/* STEP 3 */}
-                    <div className={styles.step}>
-                        <div className={styles.stepNumber}>STEP 3</div>
                         <h2 className={styles.stepTitle}>確認・サイト掲載</h2>
                         <p className={styles.stepText}>
                             ご入力いただいた内容を管理者が確認いたします。<br />
@@ -56,9 +43,9 @@ export default function OrganizerPage() {
                         </p>
                     </div>
 
-                    {/* STEP 4 */}
+                    {/* STEP 3 */}
                     <div className={styles.step}>
-                        <div className={styles.stepNumber}>STEP 4</div>
+                        <div className={styles.stepNumber}>STEP 3</div>
                         <h2 className={styles.stepTitle}>キャスト募集・採用</h2>
                         <p className={styles.stepText}>
                             募集を開始すると、希望者から主催者様のX (Twitter) DMへ直接連絡が入ります。<br />

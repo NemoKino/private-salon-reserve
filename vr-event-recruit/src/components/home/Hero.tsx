@@ -7,12 +7,12 @@ export default function Hero() {
         <section className={styles.hero}>
             <div className={styles.content}>
                 <h1 className={styles.title}>
-                    イベントで飾る、
+                    イベントで彩る、
                     <br />
                     <span className={styles.highlight}>VRライフ</span>
                 </h1>
                 <p className={styles.description}>
-                    VRChatで継続開催されているイベントの
+                    VRChatイベントの
                     <br />
                     キャスト・スタッフ募集掲示板
                 </p>

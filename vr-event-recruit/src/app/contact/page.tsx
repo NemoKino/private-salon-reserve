@@ -11,7 +11,7 @@ export const metadata = {
 
 export default function ContactPage() {
     // User's Twitter DM URL
-    const twitterUrl = "https://x.com/tmt_massage";
+    const twitterUrl = "https://x.com/vr_cast_link";
 
     return (
         <>
@@ -22,12 +22,12 @@ export default function ContactPage() {
                 <div className={styles.card}>
                     <p className={styles.text}>
                         当サイトに関するご質問、ご要望は、<br />
-                        管理人のX (Twitter) DMまでお気軽にご連絡ください。
+                        管理用アカウントのX (Twitter) DMまでお気軽にご連絡ください。
                     </p>
 
                     <div className={styles.buttonWrapper}>
                         <Button href={twitterUrl} external size="lg" variant="primary">
-                            X (Twitter) で連絡する
+                            管理用アカウントへ連絡する
                         </Button>
                     </div>
                 </div>
@@ -37,15 +37,15 @@ export default function ContactPage() {
                     <Accordion items={[
                         {
                             question: 'イベントの掲載方法は？',
-                            answer: '管理者（@tmt_massage）のX (Twitter) DMまでご連絡ください。\n掲載用のGoogleフォームをお送りしますので、必要事項をご記入ください。内容を確認させていただいた後、掲載いたします。'
+                            answer: '「イベント掲載について」のページをご覧ください。\n専用のGoogleフォームより掲載依頼をお送りいただき、内容確認後に掲載となります。'
                         },
                         {
                             question: '掲載期間やキャンセルについては？',
-                            answer: '原則として掲載期間に定めはなく、自動的に削除されることはありません。\n掲載終了をご希望の場合は、管理者までDMにてご連絡いただければ、速やかに取り下げを行います。'
+                            answer: '原則として掲載期間に定めはなく、自動的に削除されることはありません。\n掲載終了をご希望の場合は、管理用アカウント（@vr_cast_link）までDMにてご連絡いただければ、速やかに取り下げを行います。'
                         },
                         {
                             question: '自分のイベントが勝手に掲載されているのですが',
-                            answer: '申し訳ございません。イベント主催者様ご本人より管理者へDMにてご連絡ください。\nご本人確認ができ次第、直ちに削除対応させていただきます。当サイトはVRChatイベントの活性化を目的としておりますが、主催者様の意向を最優先いたします。'
+                            answer: '申し訳ございません。イベント主催者様ご本人より管理用アカウントへDMにてご連絡ください。\nご本人確認ができ次第、直ちに削除対応させていただきます。当サイトはVRChatイベントの活性化を目的としておりますが、主催者様の意向を最優先いたします。'
                         },
                         {
                             question: 'トラブルが発生した場合は？',

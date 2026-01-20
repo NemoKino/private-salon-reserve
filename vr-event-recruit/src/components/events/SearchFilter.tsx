@@ -103,13 +103,12 @@ export default function SearchFilter({ onFilterChange }: SearchFilterProps) {
 
             {/* Status Filter */}
             <div className={styles.section}>
-                <label className={`${styles.label} flex items-center cursor-pointer`}>
+                <label className={styles.checkboxWrapper}>
                     <input
                         type="checkbox"
-                        className="mr-2"
                         checked={onlyRecruiting}
                         onChange={(e) => setOnlyRecruiting(e.target.checked)}
-                        style={{ width: '1.2rem', height: '1.2rem' }}
+                        style={{ width: '1.2rem', height: '1.2rem', cursor: 'pointer' }}
                     />
                     募集中のみ表示
                 </label>
@@ -146,8 +145,8 @@ export default function SearchFilter({ onFilterChange }: SearchFilterProps) {
                     ))}
                 </div>
 
-                {/* Day Selection - Always Visible */}
-                <div className={`${styles.daysSection} ${styles.visible}`}>
+                {/* Day Selection - Show only for Weekly or Biweekly */}
+                <div className={`${styles.daysSection} ${(selectedScheduleTypes.includes('weekly') || selectedScheduleTypes.includes('biweekly')) ? styles.visible : ''}`}>
                     <div className={styles.daysContainer}>
                         <p className={styles.label} style={{ fontSize: '0.75rem', marginBottom: '0.5rem' }}>曜日を選択</p>
                         <div className={styles.chipGroup}>
