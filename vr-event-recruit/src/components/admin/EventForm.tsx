@@ -1,10 +1,14 @@
 'use client';
 
+import Link from 'next/link'; // Not strictly needed but checking consistency
 import { useState, useEffect } from 'react';
 import Button from '@/components/ui/Button';
 import styles from '@/app/admin/admin.module.css';
 import ImageUpload from '@/components/admin/ImageUpload';
 import { Event } from '@/types';
+import EventDetailView from '@/components/events/EventDetailView';
+import ImageCropper from '@/components/ui/ImageCropper';
+import TagInput from '@/components/ui/TagInput';
 
 interface FormData {
     title: string;
@@ -12,7 +16,7 @@ interface FormData {
     frequency: string;
     status: 'recruiting' | 'closed' | 'ended';
     description: string;
-    tags: string;
+    tags: string[]; // Changed
     heroImage: string;
     longDescription: string;
     scheduleText: string;
@@ -33,6 +37,7 @@ interface EventFormProps {
 
 export default function EventForm({ initialData, onSubmit, isEditing = false }: EventFormProps) {
     const [loading, setLoading] = useState(false);
+    const [showPreview, setShowPreview] = useState(false);
 
     const [formData, setFormData] = useState<FormData>({
         title: '',
@@ -40,7 +45,7 @@ export default function EventForm({ initialData, onSubmit, isEditing = false }: 
         frequency: '毎週金曜 22:00',
         status: 'recruiting',
         description: '',
-        tags: '',
+        tags: [], // Changed
         heroImage: '/images/sample-bar-hero.jpg',
         longDescription: '',
         scheduleText: '',
@@ -52,6 +57,54 @@ export default function EventForm({ initialData, onSubmit, isEditing = false }: 
         galleryImages: [], // Changed to array
         requirementsText: '',
     });
+    const [pendingFiles, setPendingFiles] = useState<{ [key: string]: File }>({});
+
+    // Cropper State
+    const [croppingImage, setCroppingImage] = useState<string | null>(null);
+    const [croppingOriginalFile, setCroppingOriginalFile] = useState<File | null>(null);
+
+    // Helper to store file for later upload
+    const handleFileSelect = (key: string, file: File) => {
+        if (key === 'heroImage') {
+            const url = URL.createObjectURL(file);
+            setCroppingImage(url);
+            setCroppingOriginalFile(file);
+            return;
+        }
+        setPendingFiles(prev => ({ ...prev, [key]: file }));
+    };
+
+    const handleCropComplete = (croppedFile: File) => {
+        setPendingFiles(prev => ({ ...prev, heroImage: croppedFile }));
+
+        // Update the preview (formData) to show the cropped version
+        const url = URL.createObjectURL(croppedFile);
+        setFormData(prev => ({ ...prev, heroImage: url }));
+
+        setCroppingImage(null);
+        setCroppingOriginalFile(null);
+    };
+
+    const handleCropCancel = () => {
+        // Fallback to original
+        if (croppingOriginalFile) {
+            setPendingFiles(prev => ({ ...prev, heroImage: croppingOriginalFile }));
+        }
+        setCroppingImage(null);
+        setCroppingOriginalFile(null);
+    };
+
+    const uploadFile = async (file: File): Promise<string> => {
+        const formData = new FormData();
+        formData.append('file', file);
+        const res = await fetch('/api/upload', {
+            method: 'POST',
+            body: formData,
+        });
+        if (!res.ok) throw new Error('Upload failed');
+        const data = await res.json();
+        return data.url;
+    };
 
     useEffect(() => {
         if (initialData) {
@@ -61,7 +114,7 @@ export default function EventForm({ initialData, onSubmit, isEditing = false }: 
                 frequency: initialData.frequency,
                 status: initialData.status as any,
                 description: initialData.description,
-                tags: initialData.tags.join(', '),
+                tags: initialData.tags, // Keep as array
                 heroImage: initialData.detail.heroImage,
                 longDescription: initialData.detail.longDescription,
                 scheduleText: initialData.detail.schedule.text,
@@ -105,10 +158,39 @@ export default function EventForm({ initialData, onSubmit, isEditing = false }: 
     const handleRemoveGalleryImage = (index: number) => {
         const newImages = formData.galleryImages.filter((_, i) => i !== index);
         setFormData({ ...formData, galleryImages: newImages });
+
+        const newPendingFiles = { ...pendingFiles };
+        // Shift pending files
+        for (let i = index; i < formData.galleryImages.length - 1; i++) {
+            if (newPendingFiles[`gallery_${i + 1}`]) {
+                newPendingFiles[`gallery_${i}`] = newPendingFiles[`gallery_${i + 1}`];
+            } else {
+                delete newPendingFiles[`gallery_${i}`];
+            }
+        }
+        delete newPendingFiles[`gallery_${formData.galleryImages.length - 1}`];
+        setPendingFiles(newPendingFiles);
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        // Manual Validation
+        const missingFields = [];
+        if (!formData.title) missingFields.push('イベント名');
+        if (!formData.description) missingFields.push('簡易説明');
+        if (!formData.longDescription) missingFields.push('詳細説明');
+        if (!formData.location) missingFields.push('開催場所');
+        if (!formData.organizerName) missingFields.push('主催者名');
+        if (!formData.twitterUrl) missingFields.push('Twitter URL');
+
+        // Admin form might not strictly enforce images in logic, but let's check basic text fields at least.
+
+        if (missingFields.length > 0) {
+            alert(`以下の必須項目が入力されていません:\n${missingFields.join('\n')}`);
+            return;
+        }
+
         setLoading(true);
 
         const requirements = formData.requirementsText
@@ -116,15 +198,44 @@ export default function EventForm({ initialData, onSubmit, isEditing = false }: 
             .map(s => s.trim())
             .filter(s => s.length > 0);
 
+        // Upload Pending Files
+        const uploadPromises: Promise<void>[] = [];
+        let uploadedThumbnail = formData.thumbnail;
+        let uploadedHeroImage = formData.heroImage;
+        let uploadedGalleryImages = [...formData.galleryImages];
+
+        if (pendingFiles['thumbnail']) {
+            uploadPromises.push(uploadFile(pendingFiles['thumbnail']).then(url => { uploadedThumbnail = url; }));
+        }
+        if (pendingFiles['heroImage']) {
+            uploadPromises.push(uploadFile(pendingFiles['heroImage']).then(url => { uploadedHeroImage = url; }));
+        }
+
+        Object.keys(pendingFiles).forEach(key => {
+            if (key.startsWith('gallery_')) {
+                const index = parseInt(key.split('_')[1]);
+                uploadPromises.push(uploadFile(pendingFiles[key]).then(url => { uploadedGalleryImages[index] = url; }));
+            }
+        });
+
+        try {
+            await Promise.all(uploadPromises);
+        } catch (error) {
+            console.error('Upload failed:', error);
+            alert('画像のアップロードに失敗しました。');
+            setLoading(false);
+            return;
+        }
+
         const eventPayload = {
             title: formData.title,
-            thumbnail: formData.thumbnail,
+            thumbnail: uploadedThumbnail,
             frequency: formData.frequency,
             status: formData.status,
-            tags: formData.tags.split(',').map(t => t.trim()).filter(t => t),
+            tags: formData.tags, // Direct array
             description: formData.description,
             detail: {
-                heroImage: formData.heroImage,
+                heroImage: uploadedHeroImage,
                 longDescription: formData.longDescription,
                 requirements: requirements,
                 schedule: {
@@ -132,7 +243,7 @@ export default function EventForm({ initialData, onSubmit, isEditing = false }: 
                     type: formData.scheduleType,
                     days: formData.scheduleDays,
                 },
-                galleryImages: formData.galleryImages.filter(url => url.length > 0), // Filter empty
+                galleryImages: uploadedGalleryImages.filter(url => url.length > 0), // Filter empty
                 location: formData.location,
             },
             organizer: {
@@ -152,8 +263,86 @@ export default function EventForm({ initialData, onSubmit, isEditing = false }: 
         }
     };
 
+    const getPreviewEvent = (): Event => ({
+        id: initialData?.id || 'preview',
+        title: formData.title || 'イベント名 (プレビュー)',
+        thumbnail: formData.thumbnail || '/images/sample-bar.jpg',
+        frequency: formData.frequency || '開催日時',
+        status: formData.status,
+        tags: formData.tags, // Array
+        description: formData.description,
+        detail: {
+            heroImage: formData.heroImage || '/images/sample-bar-hero.jpg',
+            longDescription: formData.longDescription || '詳細説明文がここに入ります。',
+            requirements: formData.requirementsText.split('\n').filter(Boolean),
+            schedule: {
+                text: formData.frequency,
+                type: formData.scheduleType as any,
+                days: formData.scheduleDays as any[],
+            },
+            galleryImages: formData.galleryImages,
+            location: formData.location || '開催場所',
+        },
+        organizer: {
+            name: formData.organizerName || '主催者名',
+            icon: '/images/organizer-icon.jpg',
+            twitterUrl: formData.twitterUrl || '#',
+        },
+        isFeaturedTop: initialData ? initialData.isFeaturedTop : false,
+    });
+
+    if (showPreview) {
+        return (
+            <div style={{ width: '100%', minHeight: '100vh', background: '#fff' }}>
+                <div style={{
+                    position: 'sticky',
+                    top: 0,
+                    zIndex: 100,
+                    background: 'rgba(255, 255, 255, 0.9)',
+                    backdropFilter: 'blur(10px)',
+                    borderBottom: '1px solid var(--color-border)',
+                    padding: '1rem',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.05)'
+                }}>
+                    <div>
+                        <span style={{ fontWeight: 'bold', marginRight: '1rem' }}>プレビューモード</span>
+                        <Button type="button" variant="secondary" size="sm" onClick={() => setShowPreview(false)}>
+                            ← 編集に戻る
+                        </Button>
+                    </div>
+                    {/* Admin save button usually at bottom, but adding here for convenience? Admin might want to scroll down first. 
+                        Let's keep it simple at top or just 'Exit Preview' at top. 
+                        The user asked for public form specifically, but consistency is good.
+                        I'll add the save button here too for consistency.
+                    */}
+                    <Button type="button" variant="primary" size="md" onClick={(e) => handleSubmit(e as any)} disabled={loading}>
+                        {loading ? '保存中...' : (isEditing ? '更新を保存' : '保存する')}
+                    </Button>
+                </div>
+
+                <EventDetailView event={getPreviewEvent()} isPreview />
+            </div>
+        );
+    }
+
     return (
         <form className={styles.form} onSubmit={handleSubmit}>
+            {croppingImage && (
+                <ImageCropper
+                    imageSrc={croppingImage}
+                    onCropComplete={handleCropComplete}
+                    onCancel={handleCropCancel}
+                    aspect={3 / 1}
+                />
+            )}
+            <div className={styles.buttonGroup} style={{ marginBottom: '1.5rem', justifyContent: 'flex-end' }}>
+                <Button type="button" variant="secondary" onClick={() => setShowPreview(true)}>
+                    プレビューを確認
+                </Button>
+            </div>
             {/* Basic Info */}
             <div className={styles.formGroup}>
                 <label className={styles.label}>イベント名</label>
@@ -178,14 +367,15 @@ export default function EventForm({ initialData, onSubmit, isEditing = false }: 
             </div>
 
             <div className={styles.formGroup}>
-                <label className={styles.label}>タグ (カンマ区切り)</label>
-                <input
-                    name="tags"
-                    placeholder="Bar, RP, 初心者歓迎"
-                    className={styles.input}
+                <label className={styles.label}>タグ</label>
+                <TagInput
                     value={formData.tags}
-                    onChange={handleChange}
+                    onChange={(tags) => setFormData({ ...formData, tags })}
+                    placeholder="Bar, RP, 初心者歓迎..."
                 />
+                <p style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '0.25rem' }}>
+                    タグを入力してEnterまたはクリックで追加できます。既存のタグが表示されます。
+                </p>
             </div>
 
             <div className={styles.formGroup}>
@@ -239,6 +429,7 @@ export default function EventForm({ initialData, onSubmit, isEditing = false }: 
                     label="サムネイル画像"
                     value={formData.thumbnail}
                     onChange={(url) => setFormData({ ...formData, thumbnail: url })}
+                    onFileSelect={(file) => handleFileSelect('thumbnail', file)}
                     helperText="一覧に表示される正方形の画像"
                 />
             </div>
@@ -248,6 +439,7 @@ export default function EventForm({ initialData, onSubmit, isEditing = false }: 
                     label="メイン画像"
                     value={formData.heroImage}
                     onChange={(url) => setFormData({ ...formData, heroImage: url })}
+                    onFileSelect={(file) => handleFileSelect('heroImage', file)}
                     helperText="詳細ページのトップに大きく表示される画像"
                 />
             </div>
@@ -271,6 +463,7 @@ export default function EventForm({ initialData, onSubmit, isEditing = false }: 
                                 label={`画像 ${index + 1}`}
                                 value={url}
                                 onChange={(newUrl) => handleGalleryImageChange(index, newUrl)}
+                                onFileSelect={(file) => handleFileSelect(`gallery_${index}`, file)}
                             />
                         </div>
                     ))}

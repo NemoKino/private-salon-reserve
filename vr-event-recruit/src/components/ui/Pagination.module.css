@@ -1,0 +1,56 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 2rem 0;
+}
+
+.pageButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.5rem;
+    height: 2.5rem;
+    padding: 0 0.5rem;
+    border: 1px solid #e2e8f0;
+    background-color: #fff;
+    color: #64748b;
+    font-size: 0.875rem;
+    cursor: pointer;
+    border-radius: 4px;
+    /* Slightly rounded, or 0 for sharp squares */
+    transition: all 0.2s ease;
+}
+
+.pageButton:hover:not(:disabled) {
+    background-color: #f1f5f9;
+    color: #334155;
+    border-color: #cbd5e1;
+}
+
+.active {
+    background-color: #e2e8f0;
+    /* Light grey matching the user image */
+    color: #1e293b;
+    font-weight: 600;
+    border-color: #cbd5e1;
+}
+
+.ellipsis {
+    color: #94a3b8;
+    padding: 0 0.5rem;
+    font-size: 0.875rem;
+}
+
+.navButton {
+    /* Styles for Prev/Next if needed, or reuse pageButton styling */
+    composes: pageButton;
+    padding: 0 1rem;
+}
+
+.navButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #f8fafc;
+}

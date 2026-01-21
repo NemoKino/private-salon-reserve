@@ -32,7 +32,7 @@ export default function Header() {
                         イベントを探す
                     </Link>
                     <Link href="/organizer" className={styles.link} onClick={() => setIsOpen(false)}>
-                        イベント掲載について
+                        イベントを掲載する
                     </Link>
                     <Link href="/about" className={styles.link} onClick={() => setIsOpen(false)}>
                         このサイトについて

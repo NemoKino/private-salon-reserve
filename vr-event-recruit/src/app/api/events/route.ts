@@ -1,41 +1,46 @@
 import { NextResponse } from 'next/server';
 import { sql } from '@/lib/db';
 import { Event } from '@/types';
+import { getPaginatedEvents } from '@/utils/events';
 
 export const dynamic = 'force-dynamic';
 
-// GET: List all events
-export async function GET() {
+export async function GET(request: Request) {
     try {
-        // Prevent caching for real-time updates
-        const { rows } = await sql`SELECT * FROM events ORDER BY created_at DESC`;
+        const url = new URL(request.url);
+        const searchParams = url.searchParams;
 
-        const events: Event[] = rows.map((row: any) => ({
-            id: row.id,
-            title: row.title,
-            thumbnail: row.thumbnail,
-            frequency: row.frequency,
-            status: row.status,
-            tags: row.tags,
-            description: row.description,
-            detail: row.detail,
-            organizer: row.organizer,
-            isFeaturedTop: row.is_featured_top,
-        }));
+        const page = parseInt(searchParams.get('page') || '1');
+        const limit = parseInt(searchParams.get('limit') || '20');
+        const keyword = searchParams.get('keyword') || undefined;
+        const tags = searchParams.getAll('tags');
+        const scheduleType = searchParams.getAll('scheduleType');
+        const days = searchParams.getAll('days');
+        const onlyRecruiting = searchParams.get('onlyRecruiting') === 'true';
+        const sort = (searchParams.get('sort') as 'newest' | 'oldest') || 'newest';
 
-        return NextResponse.json(events);
+        const result = await getPaginatedEvents({
+            page,
+            limit,
+            keyword,
+            tags,
+            scheduleType,
+            days,
+            onlyRecruiting,
+            sort
+        });
+
+        return NextResponse.json(result);
+
     } catch (error) {
         console.error('Database error:', error);
         return NextResponse.json({ error: 'Failed to fetch events' }, { status: 500 });
     }
 }
 
-// POST: Add new event
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-
-        // Simple ID generation (could use UUID)
         const id = `event-${Date.now()}`;
         const isFeaturedTop = body.isFeaturedTop || false;
 

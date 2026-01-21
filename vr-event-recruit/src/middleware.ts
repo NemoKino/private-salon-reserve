@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { verifyToken } from '@/lib/auth';
 
 export const config = {
-    // Protect only /admin routes
-    matcher: ['/admin/:path*'],
+    // Protect /admin routes and /api/admin routes
+    matcher: ['/admin/:path*', '/api/admin/:path*'],
 };
 
 export async function middleware(req: NextRequest) {

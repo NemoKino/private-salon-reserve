@@ -7,8 +7,9 @@ import Footer from '@/components/layout/Footer';
 import Button from '@/components/ui/Button';
 import { getEvents, getEventById } from '@/utils/events';
 import { Event } from '@/types';
-import EventGallery from '@/components/events/EventGallery';
 import styles from './page.module.css';
+import { getSession } from '@/lib/auth';
+import EventDetailView from '@/components/events/EventDetailView';
 
 interface Props {
     params: Promise<{ id: string }>;
@@ -60,123 +61,55 @@ export default async function EventDetailPage(props: Props) {
         notFound();
     }
 
+    // Check if event is pending
+    if (event.status === 'pending') {
+        const session = await getSession();
+        if (!session) {
+            notFound();
+        }
+    }
+
     return (
         <>
             <Header />
-            <main className={styles.main}>
-                {/* Cover Image */}
-                <div className={styles.coverWrapper}>
-                    <Image
-                        src={event.detail.heroImage}
-                        alt={event.title}
-                        fill
-                        className={styles.coverImage}
-                        priority
-                    />
-                    <div className={styles.coverOverlay}>
-                        <div className={`container ${styles.headerContent}`}>
-                            <div className={styles.headerText}>
-                                <div className={styles.tags}>
-                                    <span className={styles.statusBadge}>{event.frequency}</span>
-                                    {event.tags.map(tag => <span key={tag} className={styles.tag}>#{tag}</span>)}
-                                </div>
-                                <h1 className={styles.title}>{event.title}</h1>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className={`container ${styles.layout}`}>
-                    {/* Main Content */}
-                    <div className={styles.contentColumn}>
-
-
-                        <section className={styles.section}>
-                            <h2 className={styles.sectionTitle}>イベントについて</h2>
-
-                            {/* Gallery (Hero + Extras) */}
-                            <div className="mb-6">
-                                <EventGallery
-                                    images={[event.detail.heroImage, ...(event.detail.galleryImages || [])].filter(Boolean)}
-                                    title={event.title}
-                                />
-                            </div>
-
-                            <p className={styles.text}>{event.detail.longDescription}</p>
-                        </section>
-
-                        <section className={styles.section}>
-                            <h2 className={styles.sectionTitle}>募集要項</h2>
-                            <ul className={styles.requirementsList}>
-                                {event.detail.requirements.map((req, i) => (
-                                    <li key={i}>{req}</li>
-                                ))}
-                            </ul>
-                        </section>
-
-                        <section className={styles.section}>
-                            <h2 className={styles.sectionTitle}>開催情報</h2>
-                            <dl className={styles.infoList}>
-                                <div className={styles.infoItem}>
-                                    <dt>開催日時</dt>
-                                    <dd>{event.detail.schedule.text}</dd>
-                                </div>
-                                <div className={styles.infoItem}>
-                                    <dt>開催場所</dt>
-                                    <dd>{event.detail.location}</dd>
-                                </div>
-                            </dl>
-                        </section>
-
-                        <section className={styles.section}>
-                            <h2 className={styles.sectionTitle}>主催者・お問い合わせ</h2>
-                            <div className={styles.organizerCard}>
-                                <Image
-                                    src={event.organizer.icon}
-                                    alt={event.organizer.name}
-                                    width={64}
-                                    height={64}
-                                    className={styles.organizerIcon}
-                                />
-                                <div>
-                                    <div className={styles.organizerName}>{event.organizer.name}</div>
-                                    <a
-                                        href={event.organizer.twitterUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className={styles.twitterLink}
-                                    >
-                                        @{event.organizer.twitterUrl.split('/').pop()}
-                                    </a>
-                                </div>
-                            </div>
-                            <ShareButtons title={event.title} />
-                        </section>
-                    </div>
-
-                    {/* Sidebar CTA */}
-                    <aside className={styles.sidebar}>
-                        <div className={styles.stickyCard}>
-                            <h3 className={styles.ctaTitle}>キャストに応募する</h3>
-                            <p className={styles.ctaDesc}>
-                                応募・お問い合わせは主催者のTwitter（DM）へご連絡ください。
-                            </p>
-                            <Button href={event.organizer.twitterUrl} external size="lg" className={styles.ctaButton}>
-                                X (Twitter) で連絡する
-                            </Button>
-                        </div>
-                    </aside>
-                </div>
-            </main>
-
-            {/* Mobile Sticky CTA */}
-            <div className={styles.mobileCta}>
-                <Button href={event.organizer.twitterUrl} external size="md" className={styles.ctaButton}>
-                    X (Twitter) で連絡する
-                </Button>
-            </div>
-
+            <EventDetailView event={event} />
             <Footer />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        '@context': 'https://schema.org',
+                        '@type': 'Event',
+                        name: event.title,
+                        description: event.description,
+                        image: event.thumbnail ? [event.thumbnail] : [],
+                        eventAttendanceMode: 'https://schema.org/OnlineEventAttendanceMode',
+                        eventStatus: 'https://schema.org/EventScheduled',
+                        location: {
+                            '@type': 'VirtualLocation',
+                            url: (event.detail.location && event.detail.location.startsWith('http')) ? event.detail.location : 'https://vrchat.com',
+                        },
+                        startDate: (() => {
+                            // Quick approximation for demo/MVP. 
+                            // Ideally we parse schedule.daily/weekly to next occurrence.
+                            // For now, using created_at as a placeholder if no specific date logic exist.
+                            // Schema.org requires valid ISO date.
+                            return new Date().toISOString();
+                        })(),
+                        organizer: {
+                            '@type': 'Person',
+                            name: event.organizer.name,
+                            url: event.organizer.twitterUrl,
+                        },
+                        offers: {
+                            '@type': 'Offer',
+                            price: '0',
+                            priceCurrency: 'JPY',
+                            availability: 'https://schema.org/InStock',
+                        },
+                    }),
+                }}
+            />
         </>
     );
 }

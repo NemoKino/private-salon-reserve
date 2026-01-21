@@ -7,7 +7,7 @@ interface ButtonProps {
     variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
     size?: 'sm' | 'md' | 'lg';
     className?: string;
-    onClick?: () => void;
+    onClick?: React.MouseEventHandler<HTMLButtonElement>;
     external?: boolean;
     type?: 'button' | 'submit' | 'reset';
     disabled?: boolean;

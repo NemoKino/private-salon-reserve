@@ -21,13 +21,11 @@ export default function OrganizerPage() {
                         <div className={styles.stepNumber}>STEP 1</div>
                         <h2 className={styles.stepTitle}>お問い合わせ・掲載依頼</h2>
                         <p className={styles.stepText}>
-                            以下の「Googleフォーム」より、イベントの掲載依頼をお送りください。<br />
-                            <br />
-                            フォーム内にて、管理用アカウント (@vr_cast_link) のフォローをお願いしております。<br />
-                            <span style={{ fontSize: '0.875rem', opacity: 0.8 }}>※審査の合否通知をX (Twitter) のDMにてお送りするためです。</span>
+                            以下の「掲載依頼フォーム」より、イベントの掲載依頼をお送りください。<br />
+                            必要な画像やイベント詳細情報を入力していただきます。
                         </p>
                         <div className={styles.buttonWrapper}>
-                            <Button href="#" external size="lg" variant="primary">
+                            <Button href="/apply" size="lg" variant="primary">
                                 掲載依頼フォームへ進む
                             </Button>
                         </div>
@@ -36,11 +34,24 @@ export default function OrganizerPage() {
                     {/* STEP 2 */}
                     <div className={styles.step}>
                         <div className={styles.stepNumber}>STEP 2</div>
-                        <h2 className={styles.stepTitle}>確認・サイト掲載</h2>
+                        <h2 className={styles.stepTitle}>審査・合否のご連絡</h2>
                         <p className={styles.stepText}>
-                            ご入力いただいた内容を管理者が確認いたします。<br />
-                            内容に問題がなければサイトへ掲載し、DMにて掲載完了のご連絡を差し上げます。
+                            ご入力いただいた内容を管理者が確認し、掲載の可否を審査いたします。<br />
+                            <br />
+                            <strong>審査結果（合否）は、管理用アカウントからX (Twitter) のDMにてご連絡いたします。</strong><br />
+                            DMを受け取れるよう、以下の管理用アカウントのフォローを推奨しています。
                         </p>
+                        <div className={styles.buttonWrapper}>
+                            <Button
+                                href="https://x.com/vr_cast_link"
+                                external
+                                variant="secondary"
+                                size="lg"
+                                style={{ backgroundColor: '#000', color: '#fff', border: 'none' }}
+                            >
+                                𝕏 をフォロー
+                            </Button>
+                        </div>
                     </div>
 
                     {/* STEP 3 */}

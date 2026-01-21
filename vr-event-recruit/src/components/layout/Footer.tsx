@@ -7,7 +7,7 @@ export default function Footer() {
             <div className={`container ${styles.inner}`}>
                 <div className={styles.nav}>
                     <Link href="/list" className={styles.link}>イベントを探す</Link>
-                    <Link href="/organizer" className={styles.link}>イベント掲載について</Link>
+                    <Link href="/organizer" className={styles.link}>イベントを掲載する</Link>
                     <Link href="/about" className={styles.link}>このサイトについて</Link>
                     <Link href="/terms" className={styles.link}>利用規約</Link>
                     <Link href="/privacy" className={styles.link}>プライバシーポリシー</Link>

@@ -11,6 +11,7 @@ import styles from './admin.module.css';
 export default function AdminDashboard() {
     const [events, setEvents] = useState<Event[]>([]);
     const [loading, setLoading] = useState(true);
+    const [activeTab, setActiveTab] = useState<'published' | 'pending'>('published');
     const router = useRouter();
 
     const handleLogout = async () => {
@@ -29,15 +30,42 @@ export default function AdminDashboard() {
 
     const fetchEvents = async () => {
         try {
-            const res = await fetch('/api/events');
+            // Fetch from ADMIN API to get all statuses including pending
+            const res = await fetch('/api/admin/events');
             if (res.ok) {
                 const data = await res.json();
                 setEvents(data);
+
+                // If there are pending events, switch to pending tab by default?
+                // Optional: const hasPending = data.some((e: Event) => e.status === 'pending');
+                // if (hasPending) setActiveTab('pending');
             }
         } catch (error) {
             console.error('Failed to fetch events', error);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleApprove = async (event: Event) => {
+        if (!confirm(`「${event.title}」を承認して公開しますか？`)) return;
+
+        try {
+            const res = await fetch(`/api/events/${event.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ...event, status: 'recruiting' }),
+            });
+
+            if (res.ok) {
+                alert('公開しました！');
+                fetchEvents();
+            } else {
+                alert('更新に失敗しました');
+            }
+        } catch (error) {
+            console.error('Error approving event', error);
+            alert('通信エラーが発生しました');
         }
     };
 
@@ -69,6 +97,10 @@ export default function AdminDashboard() {
 
     if (loading) return <div className={styles.container}>Loading...</div>;
 
+    const pendingEvents = events.filter(e => e.status === 'pending');
+    const publishedEvents = events.filter(e => e.status !== 'pending');
+    const displayedEvents = activeTab === 'pending' ? pendingEvents : publishedEvents;
+
     return (
         <div className={styles.container}>
             <div className={styles.header}>
@@ -83,58 +115,121 @@ export default function AdminDashboard() {
                 </div>
             </div>
 
+            {/* Tabs */}
+            <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', borderBottom: '1px solid #e2e8f0' }}>
+                <button
+                    onClick={() => setActiveTab('published')}
+                    style={{
+                        padding: '0.75rem 1.5rem',
+                        borderBottom: activeTab === 'published' ? '2px solid #3b82f6' : 'none',
+                        color: activeTab === 'published' ? '#3b82f6' : '#64748b',
+                        fontWeight: 'bold',
+                        cursor: 'pointer'
+                    }}
+                >
+                    公開中 / 終了 ({publishedEvents.length})
+                </button>
+                <button
+                    onClick={() => setActiveTab('pending')}
+                    style={{
+                        padding: '0.75rem 1.5rem',
+                        borderBottom: activeTab === 'pending' ? '2px solid #ef4444' : 'none',
+                        color: activeTab === 'pending' ? '#ef4444' : '#64748b',
+                        fontWeight: 'bold',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem'
+                    }}
+                >
+                    承認待ち ({pendingEvents.length})
+                    {pendingEvents.length > 0 && (
+                        <span style={{ background: '#ef4444', color: 'white', borderRadius: '999px', padding: '0.1rem 0.4rem', fontSize: '0.75rem' }}>
+                            {pendingEvents.length}
+                        </span>
+                    )}
+                </button>
+            </div>
+
             <div className={styles.tableWrapper}>
                 <table className={styles.table}>
                     <thead>
                         <tr>
                             <th className={styles.th}>画像</th>
                             <th className={styles.th}>イベント名</th>
-                            <th className={styles.th}>開催ステータス</th>
+                            <th className={styles.th}>ステータス</th>
                             <th className={styles.th}>頻度</th>
                             <th className={styles.th}>操作</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {events.map((event) => (
-                            <tr key={event.id} className={styles.row}>
-                                <td className={styles.td}>
-                                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                                    <img
-                                        src={event.thumbnail}
-                                        alt=""
-                                        style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '4px' }}
-                                    />
-                                </td>
-                                <td className={styles.td} style={{ fontWeight: 'bold' }}>{event.title}</td>
-                                <td className={styles.td}>
-                                    <span className={`${styles.status} ${styles['status_' + event.status]}`}>
-                                        {event.status === 'recruiting' ? '募集中' : '終了'}
-                                    </span>
-                                </td>
-                                <td className={styles.td}>{event.frequency}</td>
-                                <td className={styles.td}>
-                                    <div className={styles.actions}>
-                                        <Link href={`/admin/edit/${event.id}`} className={styles.editButton}>
-                                            編集
-                                        </Link>
-                                        <Link href={`/events/${event.id}`} target="_blank" style={{ fontSize: '0.875rem', textDecoration: 'underline', color: '#64748b' }}>
-                                            確認
-                                        </Link>
-                                        <button
-                                            type="button"
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                e.stopPropagation();
-                                                handleDeleteClick(event);
-                                            }}
-                                            className={styles.deleteButton}
-                                        >
-                                            削除
-                                        </button>
-                                    </div>
+                        {displayedEvents.length === 0 ? (
+                            <tr>
+                                <td colSpan={5} style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>
+                                    {activeTab === 'pending' ? '承認待ちのイベントはありません' : 'イベントがありません'}
                                 </td>
                             </tr>
-                        ))}
+                        ) : (
+                            displayedEvents.map((event) => (
+                                <tr key={event.id} className={styles.row}>
+                                    <td className={styles.td}>
+                                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                                        <img
+                                            src={event.thumbnail}
+                                            alt=""
+                                            style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '4px' }}
+                                        />
+                                    </td>
+                                    <td className={styles.td} style={{ fontWeight: 'bold' }}>{event.title}</td>
+                                    <td className={styles.td}>
+                                        <span className={`${styles.status} ${styles['status_' + event.status]}`}>
+                                            {event.status === 'recruiting' ? '募集中' :
+                                                event.status === 'closed' ? '終了' :
+                                                    event.status === 'pending' ? '承認待ち' : event.status}
+                                        </span>
+                                    </td>
+                                    <td className={styles.td}>{event.frequency}</td>
+                                    <td className={styles.td}>
+                                        <div className={styles.actions}>
+                                            {event.status === 'pending' && (
+                                                <button
+                                                    onClick={() => handleApprove(event)}
+                                                    style={{
+                                                        padding: '0.25rem 0.75rem',
+                                                        borderRadius: '4px',
+                                                        fontSize: '0.875rem',
+                                                        fontWeight: 'bold',
+                                                        background: '#22c55e',
+                                                        color: 'white',
+                                                        border: 'none',
+                                                        cursor: 'pointer'
+                                                    }}
+                                                >
+                                                    承認・公開
+                                                </button>
+                                            )}
+                                            <Link href={`/admin/edit/${event.id}`} className={styles.editButton}>
+                                                編集
+                                            </Link>
+                                            <Link href={`/events/${event.id}`} target="_blank" style={{ fontSize: '0.875rem', textDecoration: 'underline', color: '#64748b' }}>
+                                                確認
+                                            </Link>
+                                            <button
+                                                type="button"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    e.stopPropagation();
+                                                    handleDeleteClick(event);
+                                                }}
+                                                className={styles.deleteButton}
+                                            >
+                                                削除
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))
+                        )}
                     </tbody>
                 </table>
             </div>

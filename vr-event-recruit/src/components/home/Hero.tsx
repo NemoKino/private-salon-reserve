@@ -21,7 +21,7 @@ export default function Hero() {
                         募集中イベントを見る
                     </Button>
                     <Button href="/organizer" variant="secondary" size="lg">
-                        イベント掲載について
+                        イベントを掲載する
                     </Button>
                 </div>
             </div>

@@ -46,6 +46,7 @@ export default function EventGallery({ images, title }: EventGalleryProps) {
                         fill
                         className={styles.image}
                         priority={selectedIndex === 0}
+                        unoptimized={typeof images[selectedIndex] === 'string' && images[selectedIndex].startsWith('blob:')}
                     />
                 </div>
 
@@ -76,6 +77,7 @@ export default function EventGallery({ images, title }: EventGalleryProps) {
                                 fill
                                 className={styles.thumbImage}
                                 sizes="80px"
+                                unoptimized={typeof img === 'string' && img.startsWith('blob:')}
                             />
                         </button>
                     ))}

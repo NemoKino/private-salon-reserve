@@ -1,4 +1,4 @@
-export type EventStatus = 'recruiting' | 'closed' | 'ended';
+export type EventStatus = 'recruiting' | 'closed' | 'ended' | 'pending';
 
 export type ScheduleType = 'daily' | 'weekly' | 'biweekly' | 'monthly' | 'oneoff' | 'irregular' | 'other';
 export type DayOfWeek = 'Sun' | 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri' | 'Sat';
@@ -12,6 +12,7 @@ export interface EventDetail {
         type: ScheduleType;
         days?: DayOfWeek[];
         dateOfMonth?: number;
+        time?: string; // HH:mm
     };
     galleryImages?: string[];
     location: string;

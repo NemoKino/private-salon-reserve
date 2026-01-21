@@ -1,7 +1,7 @@
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import EventListContainer from '@/components/events/EventListContainer';
-import { getEvents } from '@/utils/events';
+import { getPaginatedEvents, getPopularTags } from '@/utils/events';
 import { Event } from '@/types';
 
 export const revalidate = 0;
@@ -12,7 +12,12 @@ export const metadata = {
 };
 
 export default async function ListPage() {
-    const events = await getEvents();
+    const { events, total } = await getPaginatedEvents({
+        page: 1,
+        limit: 20,
+        sort: 'newest'
+    });
+    const popularTags = await getPopularTags();
 
     return (
         <>
@@ -23,7 +28,11 @@ export default async function ListPage() {
                     <p className="subtitle">あなたにぴったりのイベントを見つけよう</p>
                 </div>
 
-                <EventListContainer events={events} />
+                <EventListContainer
+                    initialEvents={events}
+                    initialTotal={total}
+                    popularTags={popularTags}
+                />
             </main>
             <Footer />
         </>

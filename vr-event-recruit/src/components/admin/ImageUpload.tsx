@@ -9,9 +9,10 @@ interface ImageUploadProps {
     value: string;
     onChange: (url: string) => void;
     helperText?: string;
+    onFileSelect?: (file: File) => void;
 }
 
-export default function ImageUpload({ label, value, onChange, helperText }: ImageUploadProps) {
+export default function ImageUpload({ label, value, onChange, helperText, onFileSelect }: ImageUploadProps) {
     const [uploading, setUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [preview, setPreview] = useState(value);
@@ -24,6 +25,19 @@ export default function ImageUpload({ label, value, onChange, helperText }: Imag
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
+
+        // If onFileSelect is provided, use it instead of immediate upload
+        if (onFileSelect) {
+            const objectUrl = URL.createObjectURL(file);
+            onChange(objectUrl);
+            setPreview(objectUrl);
+            onFileSelect(file);
+
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
+            return;
+        }
 
         setUploading(true);
         const formData = new FormData();

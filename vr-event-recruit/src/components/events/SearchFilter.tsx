@@ -1,30 +1,27 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ScheduleType, DayOfWeek } from '@/types';
 import Button from '../ui/Button';
 import styles from './SearchFilter.module.css';
+import TagInput from '../ui/TagInput';
+import SortSelect from '../ui/SortSelect';
 
 interface SearchFilterProps {
     onFilterChange: (filters: SearchFilters) => void;
+    popularTags: string[];
 }
 
 export interface SearchFilters {
     keyword: string;
-    categories: string[];
+    tags: string[];
     schedule: {
         types: ScheduleType[];
         days: DayOfWeek[];
     };
     onlyRecruiting: boolean;
+    sort: 'newest' | 'oldest';
 }
-
-const CATEGORIES = [
-    { label: 'Bar', value: 'Bar' },
-    { label: 'Club', value: 'Club' },
-    { label: 'RP', value: 'RP' },
-    { label: '初心者歓迎', value: '初心者歓迎' },
-];
 
 const SCHEDULE_TYPES: { label: string; value: ScheduleType }[] = [
     { label: '毎日', value: 'daily' },
@@ -46,32 +43,36 @@ const DAYS_OF_WEEK: { label: string; value: DayOfWeek }[] = [
     { label: '日', value: 'Sun' },
 ];
 
-export default function SearchFilter({ onFilterChange }: SearchFilterProps) {
+export default function SearchFilter({ onFilterChange, popularTags }: SearchFilterProps) {
     const [keyword, setKeyword] = useState('');
-    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+    const [tags, setTags] = useState<string[]>([]);
     const [selectedScheduleTypes, setSelectedScheduleTypes] = useState<ScheduleType[]>([]);
     const [selectedDays, setSelectedDays] = useState<DayOfWeek[]>([]);
     const [onlyRecruiting, setOnlyRecruiting] = useState(false);
+    const [sort, setSort] = useState<'newest' | 'oldest'>('newest');
 
     // Debounce filter updates
     useEffect(() => {
         const timer = setTimeout(() => {
             onFilterChange({
                 keyword,
-                categories: selectedCategories,
+                tags,
                 schedule: {
                     types: selectedScheduleTypes,
                     days: selectedDays,
                 },
                 onlyRecruiting,
+                sort,
             });
         }, 300);
         return () => clearTimeout(timer);
-    }, [keyword, selectedCategories, selectedScheduleTypes, selectedDays, onlyRecruiting, onFilterChange]);
+    }, [keyword, tags, selectedScheduleTypes, selectedDays, onlyRecruiting, sort, onFilterChange]);
 
-    const toggleCategory = (cat: string) => {
-        setSelectedCategories(prev =>
-            prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]
+    const handleTagClick = (selectedTag: string) => {
+        setTags(prev =>
+            prev.includes(selectedTag)
+                ? prev.filter(t => t !== selectedTag)
+                : [...prev, selectedTag]
         );
     };
 
@@ -89,16 +90,29 @@ export default function SearchFilter({ onFilterChange }: SearchFilterProps) {
 
     return (
         <div className={styles.container}>
-            {/* Keyword Search */}
-            <div className={styles.section}>
-                <label className={styles.label}>キーワード検索</label>
-                <input
-                    type="text"
-                    placeholder="イベント名、タグ、説明文から検索..."
-                    className={styles.input}
-                    value={keyword}
-                    onChange={(e) => setKeyword(e.target.value)}
-                />
+            {/* Top Row: Keyword & Sort */}
+            <div className="flex flex-col md:flex-row gap-4 mb-4">
+                <div className={`${styles.section} flex-1`}>
+                    <label className={styles.label}>キーワード検索</label>
+                    <input
+                        type="text"
+                        placeholder="イベント名、説明文から検索..."
+                        className={styles.input}
+                        value={keyword}
+                        onChange={(e) => setKeyword(e.target.value)}
+                    />
+                </div>
+                <div className={styles.section} style={{ minWidth: '180px' }}>
+                    <label className={styles.label}>並び替え</label>
+                    <SortSelect
+                        value={sort}
+                        onChange={(val) => setSort(val as 'newest' | 'oldest')}
+                        options={[
+                            { value: 'newest', label: '新着順' },
+                            { value: 'oldest', label: '登録が古い順' }
+                        ]}
+                    />
+                </div>
             </div>
 
             {/* Status Filter */}
@@ -114,20 +128,32 @@ export default function SearchFilter({ onFilterChange }: SearchFilterProps) {
                 </label>
             </div>
 
-            {/* Category Filter */}
+            {/* Tag Search */}
             <div className={styles.section}>
-                <label className={styles.label}>カテゴリ (タグ)</label>
-                <div className={styles.chipGroup}>
-                    {CATEGORIES.map(cat => (
-                        <button
-                            key={cat.value}
-                            onClick={() => toggleCategory(cat.value)}
-                            className={`${styles.chip} ${selectedCategories.includes(cat.value) ? styles.active : ''}`}
-                        >
-                            {cat.label}
-                        </button>
-                    ))}
+                <label className={styles.label}>タグ検索</label>
+                <div style={{ marginBottom: '0.75rem' }}>
+                    <TagInput
+                        value={tags}
+                        onChange={setTags}
+                        placeholder="タグを入力..."
+                    />
                 </div>
+                {popularTags.length > 0 && (
+                    <div>
+                        <p className={styles.label} style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '0.5rem' }}>人気のタグ</p>
+                        <div className={styles.chipGroup}>
+                            {popularTags.map(t => (
+                                <button
+                                    key={t}
+                                    onClick={() => handleTagClick(t)}
+                                    className={`${styles.chip} ${tags.includes(t) ? styles.active : ''}`}
+                                >
+                                    {t}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                )}
             </div>
 
             {/* Schedule Filter */}
