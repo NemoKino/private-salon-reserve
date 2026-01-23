@@ -335,6 +335,11 @@ export default function PublicEventForm({ onSubmit }: PublicEventFormProps) {
     };
 
     const handleFinalSubmit = async () => {
+        const confirmed = window.confirm(
+            '【送信前の確認】\n\n申請が完了すると、完了画面へ移動します。\n完了後に内容を修正する場合は管理者に連絡して再度修正依頼を行う必要があるため、誤字脱字がないかもう一度ご確認ください。\n\nこの内容で掲載申請を行ってもよろしいですか？'
+        );
+        if (!confirmed) return;
+
         setLoading(true);
 
         // Upload Pending Files
