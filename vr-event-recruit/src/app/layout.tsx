@@ -5,13 +5,13 @@ import './globals.css';
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
   title: {
-    default: 'VR CAST LINK | キャスト募集サイト',
+    default: 'VR CAST LINK | VRChat (VRC) イベント・キャスト募集',
     template: '%s | VR CAST LINK',
   },
-  description: 'VRChat内の継続イベントによるキャスト募集掲示板。ログイン不要・Twitter誘導型。',
+  description: 'VRChat (VRC) イベントのキャスト募集掲示板。ログイン不要。様々なジャンルのイベントを掲載中。',
   openGraph: {
     title: 'VR CAST LINK | キャスト募集サイト',
-    description: 'VRChat内の継続イベントによるキャスト募集掲示板。',
+    description: 'VRChat (VRC) イベントのキャスト募集掲示板。ログイン不要。様々なジャンルのイベントを掲載中。',
     url: '/',
     siteName: 'VR CAST LINK',
     locale: 'ja_JP',
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'VR CAST LINK | キャスト募集サイト',
-    description: 'VRChat内の継続イベントによるキャスト募集掲示板。',
+    description: 'VRChat (VRC) イベントのキャスト募集掲示板。ログイン不要。様々なジャンルのイベントを掲載中。',
     images: ['/images/sample-club-hero.jpg'],
   },
 };
