@@ -19,8 +19,7 @@ export interface SearchFilters {
         types: ScheduleType[];
         days: DayOfWeek[];
     };
-    onlyRecruiting: boolean;
-    sort: 'newest' | 'oldest';
+    sort?: 'newest' | 'oldest' | 'deadline';
 }
 
 const SCHEDULE_TYPES: { label: string; value: ScheduleType }[] = [
@@ -48,8 +47,7 @@ export default function SearchFilter({ onFilterChange, popularTags }: SearchFilt
     const [tags, setTags] = useState<string[]>([]);
     const [selectedScheduleTypes, setSelectedScheduleTypes] = useState<ScheduleType[]>([]);
     const [selectedDays, setSelectedDays] = useState<DayOfWeek[]>([]);
-    const [onlyRecruiting, setOnlyRecruiting] = useState(false);
-    const [sort, setSort] = useState<'newest' | 'oldest'>('newest');
+    const [sort, setSort] = useState<'newest' | 'oldest' | 'deadline'>('newest');
 
     // Debounce filter updates
     useEffect(() => {
@@ -61,12 +59,11 @@ export default function SearchFilter({ onFilterChange, popularTags }: SearchFilt
                     types: selectedScheduleTypes,
                     days: selectedDays,
                 },
-                onlyRecruiting,
                 sort,
             });
         }, 300);
         return () => clearTimeout(timer);
-    }, [keyword, tags, selectedScheduleTypes, selectedDays, onlyRecruiting, sort, onFilterChange]);
+    }, [keyword, tags, selectedScheduleTypes, selectedDays, sort, onFilterChange]);
 
     const handleTagClick = (selectedTag: string) => {
         setTags(prev =>
@@ -90,42 +87,32 @@ export default function SearchFilter({ onFilterChange, popularTags }: SearchFilt
 
     return (
         <div className={styles.container}>
-            {/* Top Row: Keyword & Sort */}
-            <div className="flex flex-col md:flex-row gap-4 mb-4">
-                <div className={`${styles.section} flex-1`}>
-                    <label className={styles.label}>キーワード検索</label>
-                    <input
-                        type="text"
-                        placeholder="イベント名、説明文から検索..."
-                        className={styles.input}
-                        value={keyword}
-                        onChange={(e) => setKeyword(e.target.value)}
-                    />
-                </div>
-                <div className={styles.section} style={{ minWidth: '180px' }}>
+            {/* Keyword Search - Full Width */}
+            <div className={styles.section}>
+                <label className={styles.label}>キーワード検索</label>
+                <input
+                    type="text"
+                    placeholder="イベント名、説明文から検索..."
+                    className={styles.input}
+                    value={keyword}
+                    onChange={(e) => setKeyword(e.target.value)}
+                />
+            </div>
+
+            {/* Sort Filter */}
+            <div className="flex flex-row gap-4 mb-6 items-end flex-wrap">
+                <div style={{ flex: '1 1 160px' }}>
                     <label className={styles.label}>並び替え</label>
                     <SortSelect
                         value={sort}
-                        onChange={(val) => setSort(val as 'newest' | 'oldest')}
+                        onChange={(val) => setSort(val as 'newest' | 'oldest' | 'deadline')}
                         options={[
                             { value: 'newest', label: '新着順' },
-                            { value: 'oldest', label: '登録が古い順' }
+                            { value: 'oldest', label: '古い順' },
+                            { value: 'deadline', label: '締切順' }
                         ]}
                     />
                 </div>
-            </div>
-
-            {/* Status Filter */}
-            <div className={styles.section}>
-                <label className={styles.checkboxWrapper}>
-                    <input
-                        type="checkbox"
-                        checked={onlyRecruiting}
-                        onChange={(e) => setOnlyRecruiting(e.target.checked)}
-                        style={{ width: '1.2rem', height: '1.2rem', cursor: 'pointer' }}
-                    />
-                    募集中のみ表示
-                </label>
             </div>
 
             {/* Tag Search */}

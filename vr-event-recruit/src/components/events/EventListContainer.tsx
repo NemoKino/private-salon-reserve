@@ -23,7 +23,6 @@ export default function EventListContainer({ initialEvents, initialTotal, popula
         keyword: '',
         tags: [],
         schedule: { types: [], days: [] },
-        onlyRecruiting: false,
         sort: 'newest'
     });
 
@@ -41,7 +40,6 @@ export default function EventListContainer({ initialEvents, initialTotal, popula
             currentFilters.schedule.types.forEach(t => params.append('scheduleType', t));
             currentFilters.schedule.days.forEach(d => params.append('days', d));
 
-            if (currentFilters.onlyRecruiting) params.set('onlyRecruiting', 'true');
             if (currentFilters.sort) params.set('sort', currentFilters.sort);
 
             const res = await fetch(`/api/events?${params.toString()}`);

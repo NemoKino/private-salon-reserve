@@ -10,23 +10,17 @@ export default function ApplyPage() {
     const router = useRouter();
 
     const handleSubmit = async (data: any) => {
-        try {
-            const res = await fetch('/api/apply', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
-            });
+        const res = await fetch('/api/apply', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        });
 
-            if (res.ok) {
-                alert('掲載申請を受け付けました！\n確認メール等はありませんので、完了までお待ちください。');
-                router.push('/');
-            } else {
-                alert('エラーが発生しました');
-            }
-        } catch (error) {
-            console.error(error);
-            alert('通信エラーが発生しました');
+        if (!res.ok) {
+            throw new Error('Failed to submit application');
         }
+
+        return await res.json();
     };
 
     return (

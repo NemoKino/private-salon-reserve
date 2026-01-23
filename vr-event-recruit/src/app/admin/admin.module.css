@@ -158,3 +158,27 @@
     background-color: #f1f5f9;
     color: #475569;
 }
+
+@media (max-width: 768px) {
+    .container {
+        padding: var(--spacing-lg) var(--spacing-sm);
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-md);
+    }
+
+    .form {
+        padding: var(--spacing-lg);
+    }
+
+    .buttonGroup {
+        flex-direction: column-reverse;
+    }
+
+    .buttonGroup>* {
+        width: 100%;
+    }
+}

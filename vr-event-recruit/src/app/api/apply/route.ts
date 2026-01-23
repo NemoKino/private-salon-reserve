@@ -12,8 +12,8 @@ export async function POST(request: Request) {
         // Simple ID generation
         const id = `event-${Date.now()}`;
 
-        // Force status to 'pending'
-        const status = 'pending';
+        // Force status to 'draft' until verified
+        const status = 'draft';
         // Force isFeaturedTop to false
         const isFeaturedTop = false;
 

@@ -9,17 +9,10 @@ interface ShareButtonsProps {
 }
 
 export default function ShareButtons({ title, url }: ShareButtonsProps) {
-    const [shareUrl, setShareUrl] = useState('');
-
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            setShareUrl(url || window.location.href);
-        }
-    }, [url]);
-
     const handleShareTwitter = () => {
+        const currentUrl = url || window.location.href;
         const text = encodeURIComponent(`${title}\n#VR_CAST_LINK`);
-        const link = encodeURIComponent(shareUrl);
+        const link = encodeURIComponent(currentUrl);
         window.open(`https://twitter.com/intent/tweet?text=${text}&url=${link}`, '_blank');
     };
 

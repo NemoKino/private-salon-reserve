@@ -24,7 +24,10 @@ export default function AdminDashboard() {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [eventToDelete, setEventToDelete] = useState<Event | null>(null);
 
+    const [isClient, setIsClient] = useState(false);
+
     useEffect(() => {
+        setIsClient(true);
         fetchEvents();
     }, []);
 
@@ -52,9 +55,9 @@ export default function AdminDashboard() {
 
         try {
             const res = await fetch(`/api/events/${event.id}`, {
-                method: 'PUT',
+                method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...event, status: 'recruiting' }),
+                body: JSON.stringify({ status: 'recruiting' }),
             });
 
             if (res.ok) {
@@ -183,9 +186,24 @@ export default function AdminDashboard() {
                                     <td className={styles.td} style={{ fontWeight: 'bold' }}>{event.title}</td>
                                     <td className={styles.td}>
                                         <span className={`${styles.status} ${styles['status_' + event.status]}`}>
-                                            {event.status === 'recruiting' ? '募集中' :
-                                                event.status === 'closed' ? '終了' :
-                                                    event.status === 'pending' ? '承認待ち' : event.status}
+                                            {(() => {
+                                                if (event.status === 'pending') return '承認待ち';
+
+                                                // Check for expiration (Only on client)
+                                                if (isClient && event.detail?.listingEndDate) {
+                                                    const endDate = new Date(event.detail.listingEndDate);
+                                                    const today = new Date();
+                                                    today.setHours(0, 0, 0, 0);
+
+                                                    const todayStr = today.toISOString().split('T')[0];
+                                                    if (event.detail.listingEndDate < todayStr) {
+                                                        return '掲載終了';
+                                                    }
+                                                }
+
+                                                return event.status === 'recruiting' ? '募集中' :
+                                                    event.status === 'closed' ? '終了' : event.status;
+                                            })()}
                                         </span>
                                     </td>
                                     <td className={styles.td}>{event.frequency}</td>
@@ -193,7 +211,12 @@ export default function AdminDashboard() {
                                         <div className={styles.actions}>
                                             {event.status === 'pending' && (
                                                 <button
-                                                    onClick={() => handleApprove(event)}
+                                                    type="button"
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        e.stopPropagation();
+                                                        handleApprove(event);
+                                                    }}
                                                     style={{
                                                         padding: '0.25rem 0.75rem',
                                                         borderRadius: '4px',

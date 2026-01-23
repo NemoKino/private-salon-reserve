@@ -1,0 +1,108 @@
+.container {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto 3rem;
+    padding: 0 1rem;
+}
+
+.stepWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+/* Connector Line */
+.connector {
+    flex-grow: 1;
+    height: 3px;
+    background-color: var(--color-border, #e2e8f0);
+    margin: 0 0.5rem;
+    border-radius: 999px;
+    position: relative;
+    top: -10px;
+    /* Adjust to align with center of circle (which is 2.5rem height + label offset) */
+    /* Actually better to just align-items: flex-start on wrapper and use margin-top on connector */
+}
+
+/* We need a better structure. 
+   Let's align items to the top (circles) and let labels hang below.
+*/
+
+.stepWrapper {
+    display: flex;
+    align-items: flex-start;
+    /* Align circles at top */
+    justify-content: space-between;
+}
+
+.stepItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    z-index: 2;
+    /* No background color needed -> Transparent! */
+    flex-shrink: 0;
+}
+
+.connector {
+    flex-grow: 1;
+    height: 3px;
+    background-color: #cbd5e1;
+    /* Gray-300 */
+    margin: 1.25rem 0.5rem 0;
+    /* Top margin centers it vertically with the 2.5rem circle */
+    border-radius: 999px;
+    transition: background-color 0.4s ease;
+}
+
+.connectorActive {
+    background-color: #3b82f6;
+    /* Blue-500 */
+}
+
+.circle {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1rem;
+    background-color: #ffffff;
+    border: 2px solid #cbd5e1;
+    color: #64748b;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    /* Subtle shadow for depth */
+}
+
+.circleActive {
+    border-color: #3b82f6;
+    color: #3b82f6;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+    /* Premium Glow */
+    transform: translateY(-2px);
+    /* Slight lift */
+}
+
+.circleCompleted {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+.label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #94a3b8;
+    transition: color 0.3s ease;
+    white-space: nowrap;
+}
+
+.labelActive {
+    color: #3b82f6;
+}

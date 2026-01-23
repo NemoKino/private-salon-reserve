@@ -73,7 +73,7 @@ export interface GetEventsOptions {
     scheduleType?: string[];
     days?: string[];
     onlyRecruiting?: boolean;
-    sort?: 'newest' | 'oldest';
+    sort?: 'newest' | 'oldest' | 'deadline';
 }
 
 export interface PaginatedResult {
@@ -110,6 +110,11 @@ export async function getPaginatedEvents(options: GetEventsOptions): Promise<Pag
                 (status != 'pending')
                 AND (${statusFilter}::text IS NULL OR status = ${statusFilter})
                 AND (
+                    (detail->>'listingEndDate') IS NULL 
+                    OR (detail->>'listingEndDate') = ''
+                    OR (detail->>'listingEndDate')::date >= CURRENT_DATE
+                )
+                AND (
                     ${keywordPattern}::text IS NULL OR 
                     title ILIKE ${keywordPattern} OR 
                     description ILIKE ${keywordPattern} OR
@@ -123,6 +128,7 @@ export async function getPaginatedEvents(options: GetEventsOptions): Promise<Pag
                     detail->'schedule'->>'type' = 'daily'
                 )
             ORDER BY
+                CASE WHEN ${sort} = 'deadline' THEN (detail->>'listingEndDate')::date END ASC NULLS LAST,
                 CASE WHEN ${sort} = 'newest' THEN created_at END DESC,
                 CASE WHEN ${sort} = 'oldest' THEN created_at END ASC
             LIMIT ${limit} OFFSET ${offset}
@@ -133,6 +139,11 @@ export async function getPaginatedEvents(options: GetEventsOptions): Promise<Pag
             WHERE
                 (status != 'pending')
                 AND (${statusFilter}::text IS NULL OR status = ${statusFilter})
+                AND (
+                    (detail->>'listingEndDate') IS NULL 
+                    OR (detail->>'listingEndDate') = ''
+                    OR (detail->>'listingEndDate')::date >= CURRENT_DATE
+                )
                 AND (
                     ${keywordPattern}::text IS NULL OR 
                     title ILIKE ${keywordPattern} OR 

@@ -88,10 +88,7 @@ export default function EventDetailView({ event, isPreview = false }: EventDetai
                                 <dt>開催日時</dt>
                                 <dd>{event.detail.schedule.text}</dd>
                             </div>
-                            <div className={styles.infoItem}>
-                                <dt>開催場所</dt>
-                                <dd>{event.detail.location}</dd>
-                            </div>
+
                         </dl>
                     </section>
 

@@ -11,7 +11,6 @@ interface TagInputProps {
 
 export default function TagInput({ value = [], onChange, placeholder = 'タグを入力...' }: TagInputProps) {
     const [inputValue, setInputValue] = useState('');
-    const [suggestions, setSuggestions] = useState<string[]>([]);
     const [allTags, setAllTags] = useState<string[]>([]);
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
@@ -34,19 +33,18 @@ export default function TagInput({ value = [], onChange, placeholder = 'タグ�
     }, []);
 
     // Filter suggestions
-    useEffect(() => {
-        if (!inputValue.trim()) {
-            setSuggestions([]);
-            return;
-        }
-
-        const filtered = allTags.filter(tag =>
+    const suggestions = (() => {
+        if (!inputValue.trim()) return [];
+        return allTags.filter(tag =>
             tag.toLowerCase().includes(inputValue.toLowerCase()) &&
             !value.includes(tag)
         );
-        setSuggestions(filtered);
-        setActiveSuggestionIndex(-1);
-    }, [inputValue, allTags, value]);
+    })();
+
+    // Reset active index when suggestions change
+    // We can't strictly do this without an effect if we rely on derived state, 
+    // but usually setting it to -1 in the input change handler is enough.
+    // I'll update onChange to reset index.
 
     // Handle outside click
     useEffect(() => {

@@ -81,7 +81,7 @@ export default function Modal({
                             variant={primaryAction.variant || 'primary'}
                             disabled={primaryAction.loading}
                         >
-                            {primaryAction.loading ? 'Process...' : primaryAction.label}
+                            {primaryAction.loading ? '処理中...' : primaryAction.label}
                         </Button>
                     )}
                 </div>

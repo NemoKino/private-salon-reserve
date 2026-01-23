@@ -27,6 +27,8 @@ interface FormData {
     twitterUrl: string;
     galleryImages: string[];
     requirementsText: string;
+    listingPeriod: string;
+    listingEndDate: string;
 }
 
 interface EventFormProps {
@@ -56,6 +58,8 @@ export default function EventForm({ initialData, onSubmit, isEditing = false }: 
         twitterUrl: 'https://twitter.com/',
         galleryImages: [], // Changed to array
         requirementsText: '',
+        listingPeriod: '1month',
+        listingEndDate: '',
     });
     const [pendingFiles, setPendingFiles] = useState<{ [key: string]: File }>({});
 
@@ -120,11 +124,13 @@ export default function EventForm({ initialData, onSubmit, isEditing = false }: 
                 scheduleText: initialData.detail.schedule.text,
                 scheduleType: initialData.detail.schedule.type || 'weekly',
                 scheduleDays: (initialData.detail.schedule.days as string[]) || [],
-                location: initialData.detail.location,
+                location: initialData.detail.location || '',
                 organizerName: initialData.organizer.name,
                 twitterUrl: initialData.organizer.twitterUrl,
                 galleryImages: initialData.detail.galleryImages || [], // Load as array
                 requirementsText: initialData.detail.requirements ? initialData.detail.requirements.join('\n') : '',
+                listingPeriod: initialData.detail.listingPeriod || '1month',
+                listingEndDate: initialData.detail.listingEndDate || '',
             });
         }
     }, [initialData]);
@@ -183,6 +189,8 @@ export default function EventForm({ initialData, onSubmit, isEditing = false }: 
         if (!formData.location) missingFields.push('開催場所');
         if (!formData.organizerName) missingFields.push('主催者名');
         if (!formData.twitterUrl) missingFields.push('Twitter URL');
+        if (formData.listingPeriod === 'custom' && !formData.listingEndDate) missingFields.push('掲載終了日');
+
 
         // Admin form might not strictly enforce images in logic, but let's check basic text fields at least.
 
@@ -202,7 +210,7 @@ export default function EventForm({ initialData, onSubmit, isEditing = false }: 
         const uploadPromises: Promise<void>[] = [];
         let uploadedThumbnail = formData.thumbnail;
         let uploadedHeroImage = formData.heroImage;
-        let uploadedGalleryImages = [...formData.galleryImages];
+        const uploadedGalleryImages = [...formData.galleryImages];
 
         if (pendingFiles['thumbnail']) {
             uploadPromises.push(uploadFile(pendingFiles['thumbnail']).then(url => { uploadedThumbnail = url; }));
@@ -227,6 +235,38 @@ export default function EventForm({ initialData, onSubmit, isEditing = false }: 
             return;
         }
 
+        // Calculate listingEndDate based on period if not custom
+        let computedListingEndDate = formData.listingEndDate;
+        if (formData.listingPeriod !== 'custom' && formData.listingPeriod !== 'indefinite') {
+            const now = new Date();
+            const endDate = new Date(now);
+
+            switch (formData.listingPeriod) {
+                case '1day':
+                    endDate.setDate(now.getDate() + 1);
+                    break;
+                case '7days':
+                    endDate.setDate(now.getDate() + 7);
+                    break;
+                case '1month':
+                    endDate.setMonth(now.getMonth() + 1);
+                    break;
+                case '3months':
+                    endDate.setMonth(now.getMonth() + 3);
+                    break;
+                case '6months':
+                    endDate.setMonth(now.getMonth() + 6);
+                    break;
+                case '12months':
+                    endDate.setMonth(now.getMonth() + 12);
+                    break;
+            }
+            // Format YYYY-MM-DD
+            computedListingEndDate = endDate.toISOString().split('T')[0];
+        } else if (formData.listingPeriod === 'indefinite') {
+            computedListingEndDate = ''; // No end date
+        }
+
         const eventPayload = {
             title: formData.title,
             thumbnail: uploadedThumbnail,
@@ -245,6 +285,8 @@ export default function EventForm({ initialData, onSubmit, isEditing = false }: 
                 },
                 galleryImages: uploadedGalleryImages.filter(url => url.length > 0), // Filter empty
                 location: formData.location,
+                listingPeriod: formData.listingPeriod,
+                listingEndDate: computedListingEndDate,
             },
             organizer: {
                 name: formData.organizerName,
@@ -282,6 +324,8 @@ export default function EventForm({ initialData, onSubmit, isEditing = false }: 
             },
             galleryImages: formData.galleryImages,
             location: formData.location || '開催場所',
+            listingPeriod: formData.listingPeriod as any,
+            listingEndDate: formData.listingEndDate,
         },
         organizer: {
             name: formData.organizerName || '主催者名',
@@ -543,6 +587,43 @@ export default function EventForm({ initialData, onSubmit, isEditing = false }: 
                     value={formData.twitterUrl}
                     onChange={handleChange}
                 />
+            </div>
+
+            <div className={styles.formGroup} style={{ background: '#f0f9ff', padding: '1.5rem', borderRadius: '8px', border: '1px solid #bae6fd' }}>
+                <label className={styles.label} style={{ fontSize: '1.1rem', borderBottom: '2px solid #bae6fd', paddingBottom: '0.5rem', marginBottom: '1rem', color: '#0369a1' }}>掲載期間の設定</label>
+
+                <div style={{ marginBottom: '1rem' }}>
+                    <label className={styles.label}>希望掲載期間</label>
+                    <select name="listingPeriod" className={styles.select} value={formData.listingPeriod} onChange={handleChange} style={{ width: 'auto' }}>
+                        <option value="1day">1日 (イベント当日のみなど)</option>
+                        <option value="7days">1週間</option>
+                        <option value="1month">1ヶ月</option>
+                        <option value="3months">3ヶ月</option>
+                        <option value="6months">6ヶ月</option>
+                        <option value="12months">12ヶ月</option>
+                        <option value="indefinite">無期限</option>
+                        <option value="custom">カスタム (日付指定)</option>
+                    </select>
+                </div>
+
+                {formData.listingPeriod === 'custom' && (
+                    <div style={{ marginBottom: '1rem' }}>
+                        <label className={styles.label}>掲載終了日</label>
+                        <input type="date" name="listingEndDate" required className={styles.input} value={formData.listingEndDate} onChange={handleChange} style={{ width: 'auto' }} />
+                        <p style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '0.25rem' }}>
+                            ※ 指定した日付の23:59まで掲載されます。
+                        </p>
+                    </div>
+                )}
+
+                {formData.listingPeriod === 'indefinite' && (
+                    <div style={{ padding: '0.75rem', background: '#fff', borderRadius: '4px', border: '1px solid #e2e8f0', color: '#B45309', fontSize: '0.9rem', display: 'flex', gap: '0.5rem' }}>
+                        <span>⚠️</span>
+                        <span>
+                            無期限を選択された場合、終了時は手動で更新（ステータス変更）が必要です。
+                        </span>
+                    </div>
+                )}
             </div>
 
             <div className={styles.buttonGroup}>

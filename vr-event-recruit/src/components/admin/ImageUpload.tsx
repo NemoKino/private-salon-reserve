@@ -5,10 +5,10 @@ import styles from './ImageUpload.module.css';
 import Button from '@/components/ui/Button';
 
 interface ImageUploadProps {
-    label: string;
+    label: React.ReactNode;
     value: string;
     onChange: (url: string) => void;
-    helperText?: string;
+    helperText?: React.ReactNode;
     onFileSelect?: (file: File) => void;
 }
 
@@ -108,16 +108,6 @@ export default function ImageUpload({ label, value, onChange, helperText, onFile
                         {uploading ? 'アップロード中...' : '画像を選択'}
                     </Button>
 
-                    <div className={styles.manualInputContainer}>
-                        <span className={styles.orText}>またはURLを入力:</span>
-                        <input
-                            type="text"
-                            value={value}
-                            onChange={handleManualChange}
-                            className={styles.manualInput}
-                            placeholder="/images/..."
-                        />
-                    </div>
                 </div>
             </div>
             {helperText && <div className={styles.helper}>{helperText}</div>}

@@ -43,6 +43,42 @@ export async function GET() {
                 '{}'::jsonb, 
                 '{"name": "Organizer C"}'::jsonb, 
                 false
+            ),
+            (
+                'event-expired', 
+                '終了したイベント（表示されないはず）', 
+                '/images/sample-bar.jpg', 
+                '毎週月曜 22:00', 
+                'recruiting', 
+                ARRAY['Bar', 'Expired'], 
+                'このイベントは掲載期間が終了しています。', 
+                '{"heroImage": "/images/sample-bar-hero.jpg", "longDescription": "詳細説明文", "requirements": ["条件1"], "schedule": {"text": "毎週月曜 22:00", "type": "weekly", "days": ["Mon"]}, "galleryImages": [], "location": "Expired World", "listingPeriod": "custom", "listingEndDate": "2023-01-01"}'::jsonb, 
+                '{"name": "Expired Organizer", "icon": "/images/organizer-icon.jpg", "twitterUrl": "https://twitter.com/expired"}'::jsonb, 
+                false
+            ),
+            (
+                'event-deadline-near', 
+                '【期限間近】明日終了イベント', 
+                '/images/sample-bar.jpg', 
+                '単発', 
+                'recruiting', 
+                ARRAY['Bar', 'Near'], 
+                'もうすぐ終わります。', 
+                '{"heroImage": "/images/sample-bar-hero.jpg", "longDescription": "詳細", "schedule": {"text": "単発", "type": "oneoff"}, "galleryImages": [], "listingPeriod": "custom", "listingEndDate": "2030-01-02"}'::jsonb, 
+                '{"name": "Near Organizer", "icon": "/images/organizer-icon.jpg", "twitterUrl": "https://twitter.com/near"}'::jsonb, 
+                false
+            ),
+            (
+                'event-deadline-far', 
+                '【期限遠い】来年終了イベント', 
+                '/images/sample-bar.jpg', 
+                '単発', 
+                'recruiting', 
+                ARRAY['Bar', 'Far'], 
+                'まだまだ続きます。', 
+                '{"heroImage": "/images/sample-bar-hero.jpg", "longDescription": "詳細", "schedule": {"text": "単発", "type": "oneoff"}, "galleryImages": [], "listingPeriod": "custom", "listingEndDate": "2031-01-01"}'::jsonb, 
+                '{"name": "Far Organizer", "icon": "/images/organizer-icon.jpg", "twitterUrl": "https://twitter.com/far"}'::jsonb, 
+                false
             )
             ON CONFLICT (id) DO NOTHING
         `;
