@@ -608,8 +608,8 @@ export default function PublicEventForm({ onSubmit }: PublicEventFormProps) {
                 <div style={{ padding: '0.5rem 0' }}>
                     <p style={{ marginBottom: '1.5rem', lineHeight: '1.6', color: '#1e293b' }}>
                         申請が完了すると、<strong style={{ color: '#0369a1' }}>本人確認画面</strong>へ移動します。<br />
-                        <span style={{ fontSize: '0.9em', color: '#64748b' }}>
-                            ※ 完了後に内容を修正したい場合は、管理者に連絡して再度修正依頼を行う必要があります。
+                        <span style={{ fontSize: '0.9em', color: '#ef4444', fontWeight: 'bold' }}>
+                            ※ この先、申請内容を変更することは出来ません
                         </span>
                     </p>
                     <div style={{ background: '#eff6ff', padding: '1rem', borderRadius: '8px', borderLeft: '4px solid #3b82f6' }}>
