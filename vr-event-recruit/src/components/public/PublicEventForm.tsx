@@ -334,12 +334,14 @@ export default function PublicEventForm({ onSubmit }: PublicEventFormProps) {
         window.scrollTo(0, 0);
     };
 
-    const handleFinalSubmit = async () => {
-        const confirmed = window.confirm(
-            '【送信前の確認】\n\n申請が完了すると、本人確認画面へ移動します。\n完了後に内容を修正する場合は管理者に連絡して再度修正依頼を行う必要があるため、誤字脱字がないかもう一度ご確認ください。\n\nこの内容で掲載申請を行ってもよろしいですか？'
-        );
-        if (!confirmed) return;
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
 
+    const handleFinalSubmit = () => {
+        setShowConfirmModal(true);
+    };
+
+    const handleRealSubmit = async () => {
+        setShowConfirmModal(false);
         setLoading(true);
 
         // Upload Pending Files
@@ -586,6 +588,40 @@ export default function PublicEventForm({ onSubmit }: PublicEventFormProps) {
 
 
 
+
+            {/* Confirmation Modal */}
+            <Modal
+                isOpen={showConfirmModal}
+                onClose={() => setShowConfirmModal(false)}
+                title="申請内容の確認"
+                primaryAction={{
+                    label: '申請して本人確認へ進む',
+                    onClick: handleRealSubmit,
+                    loading: loading
+                }}
+                secondaryAction={{
+                    label: '戻って修正する',
+                    onClick: () => setShowConfirmModal(false),
+                    variant: 'secondary'
+                }}
+            >
+                <div style={{ padding: '0.5rem 0' }}>
+                    <p style={{ marginBottom: '1.5rem', lineHeight: '1.6', color: '#1e293b' }}>
+                        申請が完了すると、<strong style={{ color: '#0369a1' }}>本人確認画面</strong>へ移動します。<br />
+                        <span style={{ fontSize: '0.9em', color: '#64748b' }}>
+                            ※ 完了後に内容を修正したい場合は、管理者に連絡して再度修正依頼を行う必要があります。
+                        </span>
+                    </p>
+                    <div style={{ background: '#eff6ff', padding: '1rem', borderRadius: '8px', borderLeft: '4px solid #3b82f6' }}>
+                        <p style={{ fontWeight: 'bold', color: '#1e40af', marginBottom: '0.25rem' }}>最終チェック</p>
+                        <ul style={{ listStyle: 'disc', paddingLeft: '1.25rem', color: '#334155', fontSize: '0.95rem' }}>
+                            <li>イベント名に誤字はありませんか？</li>
+                            <li>X (Twitter) ID は正しいですか？</li>
+                            <li>画像は正しく設定されていますか？</li>
+                        </ul>
+                    </div>
+                </div>
+            </Modal>
 
             <form className={styles.form} onSubmit={handleConfirm}>
                 <div className={styles.formGroup}>
