@@ -183,8 +183,8 @@ export default function AdminDashboard() {
                                             style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '4px' }}
                                         />
                                     </td>
-                                    <td className={styles.td} style={{ fontWeight: 'bold' }}>{event.title}</td>
-                                    <td className={styles.td}>
+                                    <td className={styles.td} data-label="イベント名" style={{ fontWeight: 'bold' }}>{event.title}</td>
+                                    <td className={styles.td} data-label="ステータス">
                                         <span className={`${styles.status} ${styles['status_' + event.status]}`}>
                                             {(() => {
                                                 if (event.status === 'draft') return '本人確認未完了';
@@ -211,7 +211,7 @@ export default function AdminDashboard() {
                                             })()}
                                         </span>
                                     </td>
-                                    <td className={styles.td}>{event.frequency}</td>
+                                    <td className={styles.td} data-label="頻度">{event.frequency}</td>
                                     <td className={styles.td}>
                                         <div className={styles.actions}>
                                             {event.status === 'pending' && (
