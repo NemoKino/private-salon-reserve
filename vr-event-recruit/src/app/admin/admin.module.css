@@ -159,6 +159,22 @@
     color: #475569;
 }
 
+.status_ended {
+    background-color: #e2e8f0;
+    color: #64748b;
+}
+
+.status_pending {
+    background-color: #ffedd5;
+    color: #c2410c;
+}
+
+.status_draft {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: 1px dashed #ef4444;
+}
+
 @media (max-width: 768px) {
     .container {
         padding: var(--spacing-lg) var(--spacing-sm);
