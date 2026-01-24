@@ -7,7 +7,7 @@ export async function getPopularTags(): Promise<string[]> {
         const { rows } = await sql`
             SELECT tag, COUNT(*) as count
             FROM (
-                SELECT unnest(tags) as tag FROM events WHERE status != 'pending'
+                SELECT unnest(tags) as tag FROM events WHERE status != 'pending' AND status != 'draft'
             ) t
             GROUP BY tag
             ORDER BY count DESC
@@ -22,7 +22,7 @@ export async function getPopularTags(): Promise<string[]> {
 
 export async function getEvents(): Promise<Event[]> {
     try {
-        const { rows } = await sql`SELECT * FROM events WHERE status != 'pending' ORDER BY created_at DESC`;
+        const { rows } = await sql`SELECT * FROM events WHERE status != 'pending' AND status != 'draft' ORDER BY created_at DESC`;
         return rows.map((row: any) => ({
             id: row.id,
             title: row.title,
@@ -107,7 +107,7 @@ export async function getPaginatedEvents(options: GetEventsOptions): Promise<Pag
         const { rows } = await sql`
             SELECT * FROM events
             WHERE
-                (status != 'pending')
+                (status != 'pending' AND status != 'draft')
                 AND (${statusFilter}::text IS NULL OR status = ${statusFilter})
                 AND (
                     (detail->>'listingEndDate') IS NULL 
@@ -137,7 +137,7 @@ export async function getPaginatedEvents(options: GetEventsOptions): Promise<Pag
         const countResult = await sql`
             SELECT COUNT(*) as total FROM events
             WHERE
-                (status != 'pending')
+                (status != 'pending' AND status != 'draft')
                 AND (${statusFilter}::text IS NULL OR status = ${statusFilter})
                 AND (
                     (detail->>'listingEndDate') IS NULL 

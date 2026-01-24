@@ -100,8 +100,8 @@ export default function AdminDashboard() {
 
     if (loading) return <div className={styles.container}>Loading...</div>;
 
-    const pendingEvents = events.filter(e => e.status === 'pending');
-    const publishedEvents = events.filter(e => e.status !== 'pending');
+    const pendingEvents = events.filter(e => e.status === 'pending' || e.status === 'draft');
+    const publishedEvents = events.filter(e => e.status !== 'pending' && e.status !== 'draft');
     const displayedEvents = activeTab === 'pending' ? pendingEvents : publishedEvents;
 
     return (
@@ -145,7 +145,7 @@ export default function AdminDashboard() {
                         gap: '0.5rem'
                     }}
                 >
-                    承認待ち ({pendingEvents.length})
+                    承認待ち / 未完了 ({pendingEvents.length})
                     {pendingEvents.length > 0 && (
                         <span style={{ background: '#ef4444', color: 'white', borderRadius: '999px', padding: '0.1rem 0.4rem', fontSize: '0.75rem' }}>
                             {pendingEvents.length}
@@ -187,6 +187,7 @@ export default function AdminDashboard() {
                                     <td className={styles.td}>
                                         <span className={`${styles.status} ${styles['status_' + event.status]}`}>
                                             {(() => {
+                                                if (event.status === 'draft') return '本人確認未完了';
                                                 if (event.status === 'pending') return '承認待ち';
 
                                                 // Check for expiration (Only on client)
@@ -201,8 +202,12 @@ export default function AdminDashboard() {
                                                     }
                                                 }
 
-                                                return event.status === 'recruiting' ? '募集中' :
-                                                    event.status === 'closed' ? '終了' : event.status;
+                                                switch (event.status) {
+                                                    case 'recruiting': return '募集中';
+                                                    case 'closed': return '募集終了';
+                                                    case 'ended': return '開催終了';
+                                                    default: return event.status;
+                                                }
                                             })()}
                                         </span>
                                     </td>
