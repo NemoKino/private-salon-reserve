@@ -195,6 +195,16 @@ export default function PublicEventForm({ onSubmit }: PublicEventFormProps) {
     const handleFileSelect = (key: string, file: File) => {
         const objectUrl = URL.createObjectURL(file);
 
+        // Direct update for gallery images (no crop)
+        if (key.startsWith('gallery_')) {
+            const index = parseInt(key.split('_')[1]);
+            const newGallery = [...formData.galleryImages];
+            newGallery[index] = objectUrl;
+            setFormData(prev => ({ ...prev, galleryImages: newGallery }));
+            setPendingFiles(prev => ({ ...prev, [key]: file }));
+            return;
+        }
+
         // Determine aspect ratio based on key
         let aspect = 1.91; // Default widely used for OG etc (approx 16:9)
         if (key === 'thumbnail') aspect = 1; // Square for thumbnail

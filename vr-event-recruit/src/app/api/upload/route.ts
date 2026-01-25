@@ -17,6 +17,14 @@ export async function POST(request: Request) {
         const arrayBuffer = await file.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
 
+        // Server-side validation (5MB)
+        if (buffer.length > 5 * 1024 * 1024) {
+            return NextResponse.json(
+                { error: 'File size exceeds 5MB limit.' },
+                { status: 400 }
+            );
+        }
+
         // Upload to Cloudinary
         const uploadResult: any = await new Promise((resolve, reject) => {
             const uploadStream = cloudinary.uploader.upload_stream(

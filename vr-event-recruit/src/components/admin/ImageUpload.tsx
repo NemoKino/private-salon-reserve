@@ -26,6 +26,13 @@ export default function ImageUpload({ label, value, onChange, helperText, onFile
         const file = e.target.files?.[0];
         if (!file) return;
 
+        // Size validation (5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            alert('ファイルサイズは5MB以下にしてください。');
+            if (fileInputRef.current) fileInputRef.current.value = '';
+            return;
+        }
+
         // If onFileSelect is provided, use it instead of immediate upload
         if (onFileSelect) {
             const objectUrl = URL.createObjectURL(file);
@@ -57,9 +64,9 @@ export default function ImageUpload({ label, value, onChange, helperText, onFile
             const data = await res.json();
             onChange(data.url);
             setPreview(data.url);
-        } catch (error) {
+        } catch (error: any) {
             console.error('Upload error:', error);
-            alert('画像のアップロードに失敗しました。');
+            alert(error.message || '画像のアップロードに失敗しました。');
         } finally {
             setUploading(false);
             if (fileInputRef.current) {

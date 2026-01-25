@@ -18,7 +18,9 @@ export default function EventDetailView({ event, isPreview = false }: EventDetai
         return match ? match[1] : null;
     };
 
-    const twitterId = getTwitterId(event.organizer.twitterUrl);
+    // Sanitize URL once
+    const twitterUrl = event.organizer.twitterUrl ? event.organizer.twitterUrl.trim() : '';
+    const twitterId = getTwitterId(twitterUrl);
     const isDefaultIcon = event.organizer.icon === '/images/organizer-icon.jpg';
 
     // Use unavatar if we have a Twitter ID and the current icon is the default placeholder
@@ -107,14 +109,14 @@ export default function EventDetailView({ event, isPreview = false }: EventDetai
                             )}
                             <div>
                                 <div className={styles.organizerName}>{event.organizer.name}</div>
-                                {event.organizer.twitterUrl && (
+                                {twitterUrl && (
                                     <a
-                                        href={event.organizer.twitterUrl}
+                                        href={twitterUrl}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className={styles.twitterLink}
                                     >
-                                        @{event.organizer.twitterUrl.split('/').pop()}
+                                        @{twitterUrl.split('/').pop()}
                                     </a>
                                 )}
                             </div>
@@ -131,11 +133,11 @@ export default function EventDetailView({ event, isPreview = false }: EventDetai
                             応募・お問い合わせは主催者のTwitter（DM）へご連絡ください。
                         </p>
                         <Button
-                            href={event.organizer.twitterUrl || '#'}
+                            href={twitterUrl || '#'}
                             external
                             size="lg"
                             className={styles.ctaButton}
-                            disabled={!event.organizer.twitterUrl}
+                            disabled={!twitterUrl}
                         >
                             X (Twitter) で連絡する
                         </Button>
@@ -146,11 +148,11 @@ export default function EventDetailView({ event, isPreview = false }: EventDetai
             {/* Mobile Sticky CTA */}
             <div className={styles.mobileCta}>
                 <Button
-                    href={event.organizer.twitterUrl || '#'}
+                    href={twitterUrl || '#'}
                     external
                     size="md"
                     className={styles.ctaButton}
-                    disabled={!event.organizer.twitterUrl}
+                    disabled={!twitterUrl}
                 >
                     X (Twitter) で連絡する
                 </Button>
