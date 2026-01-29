@@ -26,9 +26,9 @@ export default function ImageUpload({ label, value, onChange, helperText, onFile
         const file = e.target.files?.[0];
         if (!file) return;
 
-        // Size validation (5MB)
-        if (file.size > 5 * 1024 * 1024) {
-            alert('ファイルサイズは5MB以下にしてください。');
+        // Size validation (4MB to fit Vercel's 4.5MB limit)
+        if (file.size > 4 * 1024 * 1024) {
+            alert('ファイルサイズは4MB以下にしてください（サーバー制限のため）。');
             if (fileInputRef.current) fileInputRef.current.value = '';
             return;
         }

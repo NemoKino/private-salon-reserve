@@ -17,10 +17,10 @@ export async function POST(request: Request) {
         const arrayBuffer = await file.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
 
-        // Server-side validation (5MB)
-        if (buffer.length > 5 * 1024 * 1024) {
+        // Server-side validation (4MB)
+        if (buffer.length > 4 * 1024 * 1024) {
             return NextResponse.json(
-                { error: 'File size exceeds 5MB limit.' },
+                { error: 'File size exceeds 4MB limit.' },
                 { status: 400 }
             );
         }

@@ -98,6 +98,37 @@ export default function AdminDashboard() {
         }
     };
 
+    // DM Modal State
+    const [isDMModalOpen, setIsDMModalOpen] = useState(false);
+    const [targetEventForDM, setTargetEventForDM] = useState<Event | null>(null);
+
+    const openDMModal = (event: Event) => {
+        setTargetEventForDM(event);
+        setIsDMModalOpen(true);
+    };
+
+    const copyToClipboard = (text: string) => {
+        navigator.clipboard.writeText(text);
+        alert('コピーしました');
+    };
+
+    const getTemplate = (type: 'approve' | 'clarify' | 'image_request') => {
+        if (!targetEventForDM) return '';
+        const title = targetEventForDM.title;
+        const url = `${process.env.NEXT_PUBLIC_SITE_URL}/events/${targetEventForDM.id}`;
+
+        switch (type) {
+            case 'approve':
+                return `【掲載承認のご連絡】\n\nご申請いただいたイベント『${title}』を掲載承認・公開いたしました！\n\n確認はこちら:\n${url}\n\n引き続きVR Cast Linkをよろしくお願いいたします。`;
+            case 'clarify':
+                return `【確認のご連絡】\n\nご申請いただいた『${title}』について確認です。\n\nVR Cast Linkは『キャスト募集』に特化したプラットフォームです。\n今回の申請内容はイベント告知の要素が強く、具体的な募集要項（条件、シフト、報酬など）が確認できませんでした。\n\nもしスタッフ・キャストの募集も兼ねている場合は、お手数ですが募集の詳細を教えていただけますでしょうか？\n（募集がない場合は、申し訳ありませんが掲載を見送らせていただく場合があります）`;
+            case 'image_request':
+                return `【画像修正のご依頼】\n\nご申請いただいた『${title}』についてです。\n\n添付いただいた画像の一部が見切れている、または解像度が不足しているようです。\nお手数ですが、16:9または3:4比率の画像、あるいはより高画質なものを、このDMにて再送いただけますでしょうか？`;
+            default:
+                return '';
+        }
+    };
+
     if (loading) return <div className={styles.container}>Loading...</div>;
 
     const pendingEvents = events.filter(e => e.status === 'pending' || e.status === 'draft');
@@ -215,26 +246,48 @@ export default function AdminDashboard() {
                                     <td className={styles.td}>
                                         <div className={styles.actions}>
                                             {event.status === 'pending' && (
-                                                <button
-                                                    type="button"
-                                                    onClick={(e) => {
-                                                        e.preventDefault();
-                                                        e.stopPropagation();
-                                                        handleApprove(event);
-                                                    }}
-                                                    style={{
-                                                        padding: '0.25rem 0.75rem',
-                                                        borderRadius: '4px',
-                                                        fontSize: '0.875rem',
-                                                        fontWeight: 'bold',
-                                                        background: '#22c55e',
-                                                        color: 'white',
-                                                        border: 'none',
-                                                        cursor: 'pointer'
-                                                    }}
-                                                >
-                                                    承認・公開
-                                                </button>
+                                                <>
+                                                    <button
+                                                        type="button"
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            e.stopPropagation();
+                                                            handleApprove(event);
+                                                        }}
+                                                        style={{
+                                                            padding: '0.25rem 0.75rem',
+                                                            borderRadius: '4px',
+                                                            fontSize: '0.875rem',
+                                                            fontWeight: 'bold',
+                                                            background: '#22c55e',
+                                                            color: 'white',
+                                                            border: 'none',
+                                                            cursor: 'pointer'
+                                                        }}
+                                                    >
+                                                        承認
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            e.stopPropagation();
+                                                            openDMModal(event);
+                                                        }}
+                                                        style={{
+                                                            padding: '0.25rem 0.75rem',
+                                                            borderRadius: '4px',
+                                                            fontSize: '0.875rem',
+                                                            fontWeight: 'bold',
+                                                            background: '#3b82f6',
+                                                            color: 'white',
+                                                            border: 'none',
+                                                            cursor: 'pointer'
+                                                        }}
+                                                    >
+                                                        連絡
+                                                    </button>
+                                                </>
                                             )}
                                             <Link href={`/admin/edit/${event.id}`} className={styles.editButton}>
                                                 編集
@@ -281,6 +334,86 @@ export default function AdminDashboard() {
                     <br />
                     この操作は取り消せません。
                 </p>
+            </Modal>
+
+            {/* DM Template Modal */}
+            <Modal
+                isOpen={isDMModalOpen}
+                onClose={() => setIsDMModalOpen(false)}
+                title={`連絡用テンプレート (${targetEventForDM?.title})`}
+                secondaryAction={{
+                    label: '閉じる',
+                    onClick: () => setIsDMModalOpen(false),
+                }}
+            >
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                    <div style={{ padding: '1rem', background: '#f8fafc', borderRadius: '4px' }}>
+                        <p style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>申請者Twitter</p>
+                        {targetEventForDM?.organizer?.twitterUrl ? (
+                            <a
+                                href={targetEventForDM.organizer.twitterUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{ color: '#3b82f6', textDecoration: 'underline' }}
+                            >
+                                {targetEventForDM.organizer.twitterUrl}
+                            </a>
+                        ) : (
+                            <span style={{ color: '#94a3b8' }}>URLなし</span>
+                        )}
+                    </div>
+
+                    <div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                            <label style={{ fontWeight: 'bold' }}>1. 承認完了通知</label>
+                            <button
+                                onClick={() => copyToClipboard(getTemplate('approve'))}
+                                style={{ fontSize: '0.75rem', padding: '0.1rem 0.5rem', cursor: 'pointer' }}
+                            >
+                                コピー
+                            </button>
+                        </div>
+                        <textarea
+                            readOnly
+                            value={getTemplate('approve')}
+                            style={{ width: '100%', height: '100px', fontSize: '0.875rem', padding: '0.5rem', borderRadius: '4px', border: '1px solid #e2e8f0' }}
+                        />
+                    </div>
+
+                    <div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                            <label style={{ fontWeight: 'bold' }}>2. 趣旨確認（キャスト募集ではない場合）</label>
+                            <button
+                                onClick={() => copyToClipboard(getTemplate('clarify'))}
+                                style={{ fontSize: '0.75rem', padding: '0.1rem 0.5rem', cursor: 'pointer' }}
+                            >
+                                コピー
+                            </button>
+                        </div>
+                        <textarea
+                            readOnly
+                            value={getTemplate('clarify')}
+                            style={{ width: '100%', height: '120px', fontSize: '0.875rem', padding: '0.5rem', borderRadius: '4px', border: '1px solid #e2e8f0' }}
+                        />
+                    </div>
+
+                    <div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                            <label style={{ fontWeight: 'bold' }}>3. 画像不備の連絡</label>
+                            <button
+                                onClick={() => copyToClipboard(getTemplate('image_request'))}
+                                style={{ fontSize: '0.75rem', padding: '0.1rem 0.5rem', cursor: 'pointer' }}
+                            >
+                                コピー
+                            </button>
+                        </div>
+                        <textarea
+                            readOnly
+                            value={getTemplate('image_request')}
+                            style={{ width: '100%', height: '100px', fontSize: '0.875rem', padding: '0.5rem', borderRadius: '4px', border: '1px solid #e2e8f0' }}
+                        />
+                    </div>
+                </div>
             </Modal>
         </div>
     );
