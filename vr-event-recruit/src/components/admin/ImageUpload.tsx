@@ -26,19 +26,33 @@ export default function ImageUpload({ label, value, onChange, helperText, onFile
         const file = e.target.files?.[0];
         if (!file) return;
 
-        // Size validation (4MB to fit Vercel's 4.5MB limit)
+        let fileToUpload = file;
+
+        // Size validation & Auto-compression
         if (file.size > 4 * 1024 * 1024) {
-            alert('ファイルサイズは4MB以下にしてください（サーバー制限のため）。');
-            if (fileInputRef.current) fileInputRef.current.value = '';
-            return;
+            const confirmed = window.confirm('画像サイズが4MBを超えています。自動的に圧縮してアップロードしますか？\n(キャンセルすると選択を解除します)');
+            if (!confirmed) {
+                if (fileInputRef.current) fileInputRef.current.value = '';
+                return;
+            }
+
+            try {
+                const { compressImage } = await import('@/utils/imageCompression');
+                fileToUpload = await compressImage(file);
+            } catch (e) {
+                console.error('Compression failed', e);
+                alert('画像の圧縮に失敗しました。');
+                if (fileInputRef.current) fileInputRef.current.value = '';
+                return;
+            }
         }
 
         // If onFileSelect is provided, use it instead of immediate upload
         if (onFileSelect) {
-            const objectUrl = URL.createObjectURL(file);
+            const objectUrl = URL.createObjectURL(fileToUpload);
             onChange(objectUrl);
             setPreview(objectUrl);
-            onFileSelect(file);
+            onFileSelect(fileToUpload);
 
             if (fileInputRef.current) {
                 fileInputRef.current.value = '';
@@ -48,7 +62,7 @@ export default function ImageUpload({ label, value, onChange, helperText, onFile
 
         setUploading(true);
         const formData = new FormData();
-        formData.append('file', file);
+        formData.append('file', fileToUpload);
 
         try {
             const res = await fetch('/api/upload', {

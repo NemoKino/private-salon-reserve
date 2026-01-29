@@ -192,8 +192,26 @@ export default function PublicEventForm({ onSubmit }: PublicEventFormProps) {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleFileSelect = (key: string, file: File) => {
-        const objectUrl = URL.createObjectURL(file);
+    const handleFileSelect = async (key: string, file: File) => {
+        let fileToProcess = file;
+
+        // Check if file is > 4MB
+        if (file.size > 4 * 1024 * 1024) {
+            const confirmed = window.confirm('画像サイズが4MBを超えています。自動的に圧縮してアップロードしますか？\n(キャンセルすると選択を解除します)');
+            if (!confirmed) return;
+
+            try {
+                // Dynamically import to ensure client-side execution
+                const { compressImage } = await import('@/utils/imageCompression');
+                fileToProcess = await compressImage(file);
+            } catch (e) {
+                console.error('Compression failed', e);
+                alert('画像の圧縮に失敗しました。');
+                return;
+            }
+        }
+
+        const objectUrl = URL.createObjectURL(fileToProcess);
 
         // Direct update for gallery images (no crop)
         if (key.startsWith('gallery_')) {
@@ -201,7 +219,7 @@ export default function PublicEventForm({ onSubmit }: PublicEventFormProps) {
             const newGallery = [...formData.galleryImages];
             newGallery[index] = objectUrl;
             setFormData(prev => ({ ...prev, galleryImages: newGallery }));
-            setPendingFiles(prev => ({ ...prev, [key]: file }));
+            setPendingFiles(prev => ({ ...prev, [key]: fileToProcess }));
             return;
         }
 
