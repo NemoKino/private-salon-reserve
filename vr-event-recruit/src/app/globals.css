@@ -11,7 +11,7 @@
   --color-border: #e2e8f0; /* Slate 200 */
 
   /* Typography */
-  --font-family-sans: 'Inter', 'Noto Sans JP', sans-serif;
+  --font-family-sans: 'Outfit', 'Inter', 'Noto Sans JP', sans-serif;
   
   /* Spacing */
   --spacing-xs: 0.25rem;
@@ -77,7 +77,7 @@ a {
 
 .text-center { text-align: center; }
 .flex { display: flex; }
-.flex-col { display: flex; flexDirection: column; }
+.flex-col { display: flex; flex-direction: column; }
 .items-center { align-items: center; }
 .justify-center { justify-content: center; }
 .justify-between { justify-content: space-between; }
