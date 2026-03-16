@@ -5,22 +5,22 @@ import './globals.css';
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
   title: {
-    default: 'VR Workers | VRChat (VRC) イベント・キャスト募集',
-    template: '%s | VR Workers',
+    default: 'VRC Workers | VRChat (VRC) イベント・キャスト募集',
+    template: '%s | VRC Workers',
   },
   description: 'VRChat (VRC) イベントのキャスト募集掲示板。ログイン不要。様々なジャンルのイベントを掲載中。',
   openGraph: {
-    title: 'VR Workers | キャスト募集サイト',
+    title: 'VRC Workers | キャスト募集サイト',
     description: 'VRChat (VRC) イベントのキャスト募集掲示板。ログイン不要。様々なジャンルのイベントを掲載中。',
     url: '/',
-    siteName: 'VR Workers',
+    siteName: 'VRC Workers',
     locale: 'ja_JP',
     type: 'website',
     images: ['/images/sample-club-hero.jpg'], // Default OGP Image
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'VR Workers | キャスト募集サイト',
+    title: 'VRC Workers | キャスト募集サイト',
     description: 'VRChat (VRC) イベントのキャスト募集掲示板。ログイン不要。様々なジャンルのイベントを掲載中。',
     images: ['/images/sample-club-hero.jpg'],
   },

@@ -11,7 +11,7 @@ export default function TermsPage() {
                     <h1 className={styles.title}>利用規約</h1>
 
                     <div className={styles.section}>
-                        <p>この利用規約（以下「本規約」といいます。）は、VR Workers（以下「当サイト」といいます。）が提供するサービス（以下「本サービス」といいます。）の利用条件を定めるものです。</p>
+                        <p>この利用規約（以下「本規約」といいます。）は、VRC Workers（以下「当サイト」といいます。）が提供するサービス（以下「本サービス」といいます。）の利用条件を定めるものです。</p>
                     </div>
 
                     <div className={styles.section}>

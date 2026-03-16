@@ -4,8 +4,8 @@ import Button from '@/components/ui/Button';
 import styles from './page.module.css';
 
 export const metadata = {
-    title: 'イベント掲載について | VR Workers',
-    description: 'VR Workersへのイベント掲載方法と流れ',
+    title: 'イベント掲載について | VRC Workers',
+    description: 'VRC Workersへのイベント掲載方法と流れ',
 };
 
 export default function OrganizerPage() {

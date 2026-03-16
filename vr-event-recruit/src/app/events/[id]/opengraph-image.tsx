@@ -149,7 +149,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
                             fontWeight: 700,
                             letterSpacing: '0.05em',
                         }}>
-                            VR Workers
+                            VRC Workers
                         </div>
                     </div>
                 </div>

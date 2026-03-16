@@ -14,7 +14,7 @@ export default function Header() {
         <header className={styles.header}>
             <div className={`container ${styles.inner}`}>
                 <Link href="/" className={styles.logo} onClick={() => setIsOpen(false)}>
-                    VR Workers
+                    VRC Workers
                 </Link>
 
                 <button
