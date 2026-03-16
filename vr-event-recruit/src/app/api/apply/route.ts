@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { sql } from '@/lib/db';
 import { eventApplySchema } from '@/lib/validations/eventSchema';
+import { sendAdminNotification } from '@/lib/mail';
 
 export const dynamic = 'force-dynamic';
 
@@ -68,6 +69,13 @@ export async function POST(request: Request) {
                 ${isFeaturedTop}
             )
         `;
+
+        // Send Email Notification to Admin (Async)
+        sendAdminNotification({
+            title: data.title,
+            organizerName: data.organizerName,
+            twitterId: data.twitterId,
+        }).catch(err => console.error('Email notification background error:', err));
 
         const newEvent = {
             id,
