@@ -7,9 +7,9 @@ export default function Hero() {
         <section className={styles.hero}>
             <div className={styles.content}>
                 <h1 className={styles.title}>
-                    イベントで彩る、
+                    <ruby>遊び<rt>VR</rt></ruby>だから、
                     <br />
-                    <span className={styles.highlight}>VRライフ</span>
+                    <span className={styles.highlight}>本気で挑める</span>
                 </h1>
                 <p className={styles.description}>
                     VRChatイベントの
