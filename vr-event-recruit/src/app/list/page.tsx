@@ -7,7 +7,7 @@ import { Event } from '@/types';
 export const revalidate = 0;
 
 export const metadata = {
-    title: 'イベント一覧 | VR CAST LINK',
+    title: 'イベント一覧 | VR Workers',
     description: '現在キャスト募集中のVRChatイベント一覧',
 };
 

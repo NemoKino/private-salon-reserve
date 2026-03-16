@@ -11,7 +11,7 @@ export default function PrivacyPage() {
                     <h1 className={styles.title}>プライバシーポリシー</h1>
 
                     <div className={styles.section}>
-                        <p>VR CAST LINK（以下「当サイト」といいます。）は、本ウェブサイト上で提供するサービス（以下「本サービス」といいます。）における、ユーザーの個人情報の取扱いについて、以下のとおりプライバシーポリシー（以下「本ポリシー」といいます。）を定めます。</p>
+                        <p>VR Workers（以下「当サイト」といいます。）は、本ウェブサイト上で提供するサービス（以下「本サービス」といいます。）における、ユーザーの個人情報の取扱いについて、以下のとおりプライバシーポリシー（以下「本ポリシー」といいます。）を定めます。</p>
                     </div>
 
                     <div className={styles.section}>

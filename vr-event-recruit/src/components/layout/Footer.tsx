@@ -14,7 +14,7 @@ export default function Footer() {
                     <Link href="/contact" className={styles.link}>お問い合わせ</Link>
                 </div>
                 <p className={styles.copy}>
-                    &copy; {new Date().getFullYear()} VR CAST LINK. All rights reserved.
+                    &copy; {new Date().getFullYear()} VR Workers. All rights reserved.
                 </p>
             </div>
         </footer>

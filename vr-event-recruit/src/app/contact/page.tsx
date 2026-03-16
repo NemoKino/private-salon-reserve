@@ -5,8 +5,8 @@ import Accordion from '@/components/ui/Accordion';
 import styles from './page.module.css';
 
 export const metadata = {
-    title: 'お問い合わせ | VR CAST LINK',
-    description: 'VR CAST LINKへのお問い合わせ',
+    title: 'お問い合わせ | VR Workers',
+    description: 'VR Workersへのお問い合わせ',
 };
 
 export default function ContactPage() {

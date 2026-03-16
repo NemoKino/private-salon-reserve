@@ -4,8 +4,8 @@ import Button from '@/components/ui/Button';
 import styles from './page.module.css';
 
 export const metadata = {
-    title: 'イベント掲載について | VR CAST LINK',
-    description: 'VR CAST LINKへのイベント掲載方法と流れ',
+    title: 'イベント掲載について | VR Workers',
+    description: 'VR Workersへのイベント掲載方法と流れ',
 };
 
 export default function OrganizerPage() {
@@ -19,14 +19,14 @@ export default function OrganizerPage() {
                     {/* STEP 1 */}
                     <div className={styles.step}>
                         <div className={styles.stepNumber}>STEP 1</div>
-                        <h2 className={styles.stepTitle}>お問い合わせ・掲載依頼</h2>
+                        <h2 className={styles.stepTitle}>イベントの掲載申請を行う</h2>
                         <p className={styles.stepText}>
-                            以下の「掲載依頼フォーム」より、イベントの掲載依頼をお送りください。<br />
+                            以下の「掲載申請フォーム」より、イベントの掲載申請をお送りください。<br />
                             必要な画像やイベント詳細情報を入力していただきます。
                         </p>
                         <div className={styles.buttonWrapper}>
                             <Button href="/apply" size="lg" variant="primary">
-                                掲載依頼フォームへ進む
+                                掲載申請フォームへ進む
                             </Button>
                         </div>
                     </div>

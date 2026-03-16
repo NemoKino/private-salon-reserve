@@ -5,8 +5,8 @@ import Footer from '@/components/layout/Footer';
 import styles from './page.module.css';
 
 export const metadata = {
-    title: 'このサイトについて | VR CAST LINK',
-    description: 'VR CAST LINKの運営目的と管理者について',
+    title: 'このサイトについて | VR Workers',
+    description: 'VR Workersの運営目的と管理者について',
 };
 
 export default function AboutPage() {
@@ -17,7 +17,7 @@ export default function AboutPage() {
                 <section className={styles.section}>
                     <h1 className={styles.title}>このサイトについて</h1>
                     <p className={styles.text}>
-                        こんにちは！VR CAST LINKへようこそ。<br />
+                        こんにちは！VR Workersへようこそ。<br />
                         このサイトは、「VRChatのイベントをもっと盛り上げたい！」というシンプルな想いから生まれました。
                     </p>
                     <p className={styles.text}>

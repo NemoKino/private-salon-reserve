@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { sql } from '@/lib/db';
-import { Event } from '@/types';
+import { eventApplySchema } from '@/lib/validations/eventSchema';
 
 export const dynamic = 'force-dynamic';
 
@@ -8,6 +8,22 @@ export const dynamic = 'force-dynamic';
 export async function POST(request: Request) {
     try {
         const body = await request.json();
+
+        // Server-Side Validation
+        const result = eventApplySchema.safeParse(body);
+
+        if (!result.success) {
+            // Return validation errors
+            return NextResponse.json(
+                {
+                    error: 'Validation Failed',
+                    details: result.error.format()
+                },
+                { status: 400 }
+            );
+        }
+
+        const data = result.data; // Type-safe data
 
         // Simple ID generation
         const id = `event-${Date.now()}`;
@@ -17,25 +33,45 @@ export async function POST(request: Request) {
         // Force isFeaturedTop to false
         const isFeaturedTop = false;
 
+        // Use validated data for insertion
         await sql`
             INSERT INTO events (id, title, thumbnail, frequency, status, tags, description, detail, organizer, is_featured_top)
             VALUES (
                 ${id}, 
-                ${body.title}, 
-                ${body.thumbnail}, 
-                ${body.frequency}, 
+                ${data.title}, 
+                ${data.thumbnail}, 
+                ${data.frequency}, 
                 ${status}, 
-                ${body.tags}, 
-                ${body.description}, 
-                ${body.detail}::jsonb, 
-                ${body.organizer}::jsonb, 
+                ${JSON.stringify(data.tags)}, 
+                ${data.description}, 
+                ${JSON.stringify({
+                heroImage: data.heroImage,
+                longDescription: data.longDescription,
+                requirements: data.requirementsText ? data.requirementsText.split('\n') : [],
+                schedule: {
+                    text: data.frequency,
+                    type: data.scheduleType,
+                    days: data.scheduleDays,
+                    time: data.scheduleTime,
+                    timeEnd: data.scheduleTimeEnd,
+                    dateOfMonth: data.scheduleDate,
+                },
+                galleryImages: data.galleryImages.filter((url: string) => url !== ''),
+                listingPeriod: data.listingPeriod,
+                listingEndDate: data.listingEndDate
+            })}::jsonb, 
+                ${JSON.stringify({
+                name: data.organizerName,
+                icon: '/images/organizer-icon.jpg',
+                twitterUrl: `https://twitter.com/${data.twitterId.replace('@', '')}`
+            })}::jsonb, 
                 ${isFeaturedTop}
             )
         `;
 
-        const newEvent: Event = {
+        const newEvent = {
             id,
-            ...body,
+            ...data,
             status,
             isFeaturedTop,
         };
