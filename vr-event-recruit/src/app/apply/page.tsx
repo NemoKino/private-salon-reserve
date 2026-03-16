@@ -17,6 +17,17 @@ export default function ApplyPage() {
         });
 
         if (!res.ok) {
+            if (res.status === 400) {
+                const errorData = await res.json();
+                console.error('Validation Error:', errorData);
+                // Return structured error message if available
+                if (errorData.details) {
+                    const fields = Object.keys(errorData.details)
+                        .filter(k => k !== '_errors')
+                        .join(', ');
+                    throw new Error(`入力内容の検証に失敗しました (${fields})。内容を確認してください。`);
+                }
+            }
             throw new Error('Failed to submit application');
         }
 

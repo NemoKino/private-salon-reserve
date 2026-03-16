@@ -7,7 +7,7 @@ export const eventApplySchema = z.object({
     // 1. Basic Information
     title: z.string().min(1, 'イベント名は必須です').max(100, 'イベント名は100文字以内で入力してください'),
     organizerName: z.string().min(1, '主催者名は必須です').max(50, '主催者名は50文字以内で入力してください'),
-    twitterId: z.string().min(1, 'Twitter IDは必須です').max(15, 'Twitter IDは15文字以内で入力してください').regex(/^@?[a-zA-Z0-9_]+$/, 'Twitter IDは半角英数字とアンダースコアのみ使用できます'),
+    twitterId: z.string().min(1, 'Twitter IDは必須です').max(16, 'Twitter IDは16文字以内で入力してください').regex(/^@?[a-zA-Z0-9_]+$/, 'Twitter IDは半角英数字とアンダースコアのみ使用できます'),
 
     // 2. Descriptions
     description: z.string().min(1, '簡易説明は必須です').max(200, '簡易説明は200文字以内で入力してください'),
