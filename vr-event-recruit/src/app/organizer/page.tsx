@@ -43,7 +43,7 @@ export default function OrganizerPage() {
                         </p>
                         <div className={styles.buttonWrapper}>
                             <Button
-                                href="https://x.com/vr_cast_link"
+                                href="https://x.com/vrc_workers"
                                 external
                                 variant="secondary"
                                 size="lg"

@@ -11,7 +11,7 @@ interface ShareButtonsProps {
 export default function ShareButtons({ title, url }: ShareButtonsProps) {
     const handleShareTwitter = () => {
         const currentUrl = url || window.location.href;
-        const text = encodeURIComponent(`${title}\n#VR_CAST_LINK`);
+        const text = encodeURIComponent(`${title}\n#VRC_Workers`);
         const link = encodeURIComponent(currentUrl);
         window.open(`https://twitter.com/intent/tweet?text=${text}&url=${link}`, '_blank');
     };

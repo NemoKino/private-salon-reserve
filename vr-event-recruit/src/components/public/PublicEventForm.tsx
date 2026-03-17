@@ -822,7 +822,7 @@ export default function PublicEventForm({ onSubmit }: PublicEventFormProps) {
                     <p style={{ fontSize: '0.85rem', color: '#475569', marginBottom: '0.5rem' }}>
                         応募の連絡先として使用されます。管理者またはイベント公式アカウントのIDを入力してください。
                     </p>
-                    <input name="twitterId" required className={styles.input} value={formData.twitterId} onChange={handleChange} placeholder="@vr_cast_link" />
+                    <input name="twitterId" required className={styles.input} value={formData.twitterId} onChange={handleChange} placeholder="@vrc_workers" />
                     <p style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '0.25rem' }}>
                         ※ @から始まるIDを入力してください。<br />
                         ※ 申請後の合否通知も、こちらのアカウントへDMにてお送りします。

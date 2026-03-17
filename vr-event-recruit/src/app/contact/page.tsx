@@ -11,7 +11,7 @@ export const metadata = {
 
 export default function ContactPage() {
     // User's Twitter DM URL
-    const twitterUrl = "https://x.com/vr_cast_link";
+    const twitterUrl = "https://x.com/vrc_workers";
 
     return (
         <>
@@ -41,7 +41,7 @@ export default function ContactPage() {
                         },
                         {
                             question: '掲載期間やキャンセルについては？',
-                            answer: '申請時に「1週間」～「無期限」もしくは「日付指定」で掲載期間をお選びいただけます。\n期間終了後は自動的に掲載が終了しますが、延長をご希望の場合は管理用アカウント（@vr_cast_link）までDMにてご連絡ください。\nまた、期間途中で掲載を取り下げたい場合も、同様にDMにてご連絡いただければ対応いたします。'
+                            answer: '申請時に「1週間」～「無期限」もしくは「日付指定」で掲載期間をお選びいただけます。\n期間終了後は自動的に掲載が終了しますが、延長をご希望の場合は管理用アカウント（@vrc_workers）までDMにてご連絡ください。\nまた、期間途中で掲載を取り下げたい場合も、同様にDMにてご連絡いただければ対応いたします。'
                         },
                         {
                             question: '掲載に費用はかかりますか？',

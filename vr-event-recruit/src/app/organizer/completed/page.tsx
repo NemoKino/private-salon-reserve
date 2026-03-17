@@ -14,7 +14,7 @@ function RegistrationCompletedContent() {
     const router = useRouter();
     const eventTitle = searchParams.get('title') || 'イベント名';
     const eventId = searchParams.get('id');
-    const adminTwitterId = process.env.NEXT_PUBLIC_ADMIN_TWITTER_ID || '@vr_cast_link';
+    const adminTwitterId = process.env.NEXT_PUBLIC_ADMIN_TWITTER_ID || '@vrc_workers';
     const adminTwitterUrl = `https://x.com/${adminTwitterId.replace(/^@/, '')}`;
 
     const [isVerified, setIsVerified] = useState(false);
