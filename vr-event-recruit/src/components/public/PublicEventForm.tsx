@@ -189,6 +189,14 @@ export default function PublicEventForm({ onSubmit }: PublicEventFormProps) {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
+        
+        // Stricter validation for twitterId to prevent full-width etc.
+        if (name === 'twitterId') {
+            const filteredValue = value.replace(/[^a-zA-Z0-9_@]/g, '');
+            setFormData(prev => ({ ...prev, [name]: filteredValue }));
+            return;
+        }
+
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 

@@ -22,10 +22,11 @@ export async function sendAdminNotification(eventData: {
     }
 
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+    const fromEmail = process.env.RESEND_FROM_EMAIL || 'VRC Workers <noreply@vrc-workers.com>';
 
     try {
-        await resend.emails.send({
-            from: 'VRC Workers <noreply@vrc-workers.com>',
+        const result = await resend.emails.send({
+            from: fromEmail,
             to: adminEmail,
             subject: `【新着申請】${eventData.title}`,
             html: `
@@ -52,7 +53,13 @@ export async function sendAdminNotification(eventData: {
                 </div>
             `,
         });
+
+        if (result.error) {
+            console.error('Resend API Error:', result.error.name, result.error.message);
+        } else {
+            console.log('Notification email sent successfully:', result.data?.id);
+        }
     } catch (error) {
-        console.error('Failed to send admin notification email:', error);
+        console.error('Unexpected error in sendAdminNotification:', error);
     }
 }
