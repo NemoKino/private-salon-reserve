@@ -34,6 +34,9 @@ export async function POST(request: Request) {
         // Force isFeaturedTop to false
         const isFeaturedTop = false;
 
+        // Format tags for Postgres array (text[])
+        const tagsArrayLiteral = `{${data.tags.map(t => `"${t.replace(/"/g, '\\"')}"`).join(',')}}`;
+
         // Use validated data for insertion
         await sql`
             INSERT INTO events (id, title, thumbnail, frequency, status, tags, description, detail, organizer, is_featured_top)
@@ -43,7 +46,7 @@ export async function POST(request: Request) {
                 ${data.thumbnail}, 
                 ${data.frequency}, 
                 ${status}, 
-                ${JSON.stringify(data.tags)}, 
+                ${tagsArrayLiteral}, 
                 ${data.description}, 
                 ${JSON.stringify({
                 heroImage: data.heroImage,
@@ -58,13 +61,14 @@ export async function POST(request: Request) {
                     dateOfMonth: data.scheduleDate,
                 },
                 galleryImages: data.galleryImages.filter((url: string) => url !== ''),
+                location: 'VRChat',
                 listingPeriod: data.listingPeriod,
                 listingEndDate: data.listingEndDate
             })}::jsonb, 
                 ${JSON.stringify({
                 name: data.organizerName,
                 icon: '/images/organizer-icon.jpg',
-                twitterUrl: `https://twitter.com/${data.twitterId.replace('@', '')}`
+                twitterUrl: `https://x.com/${data.twitterId.replace('@', '')}`
             })}::jsonb, 
                 ${isFeaturedTop}
             )
@@ -86,7 +90,14 @@ export async function POST(request: Request) {
 
         return NextResponse.json(newEvent, { status: 201 });
     } catch (error) {
-        console.error('Error saving application:', error);
-        return NextResponse.json({ error: 'Failed to save application' }, { status: 500 });
+        console.error('CRITICAL: Error saving application:', error);
+        if (error instanceof Error) {
+            console.error('Error message:', error.message);
+            console.error('Error stack:', error.stack);
+        }
+        return NextResponse.json({ 
+            error: 'Failed to save application',
+            details: error instanceof Error ? error.message : String(error)
+        }, { status: 500 });
     }
 }
