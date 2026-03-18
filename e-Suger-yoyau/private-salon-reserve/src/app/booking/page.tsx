@@ -26,7 +26,7 @@ export default async function BookingPage() {
   return (
     <div className={styles.container}>
       <header className={styles.bookingHeader}>
-        <h1>e-Sugar</h1>
+        <h1>DEMO</h1>
         <p>ご予約フォーム</p>
       </header>
 
@@ -40,7 +40,7 @@ export default async function BookingPage() {
       </main>
 
       <footer className={styles.bookingFooter}>
-        <p>© 2026 e-Sugar. All rights reserved.</p>
+        <p>© 2026 DEMO. All rights reserved.</p>
       </footer>
     </div>
   )

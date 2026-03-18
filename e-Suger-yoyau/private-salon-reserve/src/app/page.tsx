@@ -7,7 +7,7 @@ export default function Home() {
       <header className={styles.hero}>
         <div className={styles.heroContent}>
           <h1>Private Salon</h1>
-          <span className={styles.salonName}>e-Sugar</span>
+          <span className={styles.salonName}>DEMO</span>
           <div className={styles.heroSeparator}></div>
           <p>あなただけの、特別な時間と空間を。</p>
           <div className={styles.heroActions}>
@@ -37,7 +37,7 @@ export default function Home() {
         <div className={styles.footerLinks}>
           <Link href="/admin">管理者ログイン</Link>
         </div>
-        <p>© 2026 e-Sugar. All rights reserved.</p>
+        <p>© 2026 DEMO. All rights reserved.</p>
       </footer>
     </div>
   )
