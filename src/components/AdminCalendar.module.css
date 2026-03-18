@@ -1,0 +1,242 @@
+.calendarContainer {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 6rem);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1.5rem;
+  color: var(--text-primary);
+}
+.calendarHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+.calendarHeader h2 {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  color: var(--text-primary);
+  letter-spacing: 0.05em;
+}
+.primaryButton {
+  background-color: var(--accent);
+  color: white;
+  border: 1px solid var(--accent);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all var(--transition);
+}
+.primaryButton:hover {
+  background-color: var(--accent-light);
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+.calendarWrapper {
+  flex-grow: 1;
+  min-height: 500px;
+}
+
+/* override raw react-big-calendar styles for Dark Gothic Luxe */
+:global(.rbc-calendar) {
+  font-family: inherit;
+  color: var(--text-primary);
+}
+
+/* Toolbar */
+:global(.rbc-toolbar button) {
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  transition: all 0.2s;
+}
+:global(.rbc-toolbar button:hover),
+:global(.rbc-toolbar button:active),
+:global(.rbc-toolbar button.rbc-active) {
+  background: var(--accent) !important;
+  border-color: var(--accent-light) !important;
+  color: white !important;
+  box-shadow: 0 0 8px var(--accent-glow) !important;
+}
+
+/* Headers & Cells */
+:global(.rbc-header) {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.08) !important;
+  padding: 0.5rem 0 !important;
+  background: var(--bg-secondary);
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+:global(.rbc-month-view),
+:global(.rbc-time-view),
+:global(.rbc-agenda-view) {
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background: var(--bg-primary);
+}
+
+:global(.rbc-day-bg) {
+  border-left: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+:global(.rbc-month-row) {
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Time Grid */
+:global(.rbc-timeslot-group) {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+:global(.rbc-time-content) {
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+:global(.rbc-time-header-content) {
+  border-left: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+:global(.rbc-time-column) {
+  border-left: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+:global(.rbc-label) {
+  color: var(--text-secondary);
+  padding: 0 5px;
+}
+
+/* Today highlight */
+:global(.rbc-today) {
+  background: rgba(139, 0, 0, 0.1) !important; /* light crimson tint */
+}
+:global(.rbc-off-range-bg) {
+  background: var(--bg-secondary) !important;
+}
+
+/* Events */
+:global(.rbc-event) {
+  padding: 2px 5px;
+  font-size: 0.85rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+:global(.rbc-event:focus) {
+  outline: 2px solid white;
+}
+
+/* ===== Event Modal ===== */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modalContent {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  width: 90%;
+  max-width: 450px;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.modalHeader h3 {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  letter-spacing: 0.05em;
+  color: var(--text-primary);
+}
+
+.closeButton {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.5rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--transition);
+}
+
+.closeButton:hover {
+  color: var(--error);
+}
+
+.modalBody {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+.detailRow:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.detailLabel {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.detailValue {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.modalFooter {
+  padding: 1.25rem 1.5rem;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.secondaryButton {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all var(--transition);
+}
+
+.secondaryButton:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--text-secondary);
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
