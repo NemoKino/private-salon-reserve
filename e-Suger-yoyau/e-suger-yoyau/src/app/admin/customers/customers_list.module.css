@@ -1,0 +1,37 @@
+.pageHeader {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 1.5rem;
+}
+.pageHeader h1 { font-family: var(--font-serif); font-size: 1.75rem; font-weight: 600; margin: 0; letter-spacing: 0.08em; }
+.primaryButton {
+  background: var(--accent); color: white; padding: 0.5rem 1rem;
+  border: 1px solid var(--accent); text-decoration: none; font-weight: 500;
+  transition: all var(--transition);
+}
+.primaryButton:hover { background: var(--accent-light); box-shadow: 0 0 12px var(--accent-glow); }
+.searchBar { margin-bottom: 1rem; }
+.searchBar form { display: flex; gap: 0.5rem; }
+.searchBar input {
+  flex: 1; padding: 0.625rem; border: 1px solid var(--border-color);
+  background: var(--bg-secondary); color: var(--text-primary); font-size: 0.95rem;
+}
+.searchBar input:focus { outline: none; border-color: var(--accent-light); }
+.searchBar button {
+  padding: 0.625rem 1rem; background: var(--bg-card-hover); color: var(--text-primary);
+  border: 1px solid var(--border-color); cursor: pointer; transition: all var(--transition);
+}
+.searchBar button:hover { border-color: var(--accent-light); }
+.tableContainer {
+  background: var(--bg-card); border: 1px solid var(--border-color); overflow: hidden;
+}
+.table { width: 100%; border-collapse: collapse; }
+.table th { background: var(--bg-secondary); padding: 0.75rem 1rem; text-align: left;
+  font-size: 0.8rem; color: var(--text-muted); border-bottom: 1px solid var(--border-color);
+  letter-spacing: 0.05em; text-transform: uppercase; }
+.table td { padding: 0.875rem 1rem; border-bottom: 1px solid var(--border-color);
+  font-size: 0.9rem; color: var(--text-primary); }
+.table tr:last-child td { border-bottom: none; }
+.table tr:hover td { background: var(--bg-card-hover); }
+.emptyState { text-align: center; color: var(--text-muted); padding: 3rem; }
+.actionLink { color: var(--accent-light); text-decoration: none; font-weight: 500; }
+.actionLink:hover { text-decoration: underline; }

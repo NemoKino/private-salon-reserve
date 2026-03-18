@@ -1,0 +1,68 @@
+.pageHeader {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 2rem;
+}
+.title { font-family: var(--font-serif); font-size: 1.75rem; font-weight: 600; margin: 0; letter-spacing: 0.08em; }
+.primaryButton {
+  background: var(--accent); color: white; padding: 0.625rem 1.25rem;
+  border: 1px solid var(--accent); text-decoration: none; font-weight: 500;
+  transition: all var(--transition); font-size: 0.9rem;
+}
+.primaryButton:hover { background: var(--accent-light); box-shadow: 0 0 12px var(--accent-glow); }
+
+.tableContainer {
+  background: var(--bg-card); border: 1px solid var(--border-color);
+  overflow: hidden;
+}
+.table { width: 100%; border-collapse: collapse; }
+.table th {
+  background: var(--bg-secondary); padding: 0.75rem 1rem; text-align: left;
+  font-size: 0.8rem; color: var(--text-muted); border-bottom: 1px solid var(--border-color);
+  letter-spacing: 0.05em; text-transform: uppercase;
+}
+.table td {
+  padding: 0.875rem 1rem; border-bottom: 1px solid var(--border-color);
+  font-size: 0.9rem; vertical-align: middle; color: var(--text-primary);
+}
+.menuName { font-weight: 500; }
+.menuDesc { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.2rem; }
+
+.toggle {
+  padding: 0.25rem 0.625rem; border-radius: 99px; border: none;
+  cursor: pointer; font-size: 0.8rem; font-weight: 500;
+}
+.toggleOn { background: var(--success-bg); color: var(--success); border: 1px solid rgba(5,150,105,0.3); }
+.toggleOff { background: var(--bg-secondary); color: var(--text-muted); border: 1px solid var(--border-color); }
+
+.actions { display: flex; gap: 0.75rem; align-items: center; }
+.actionLink { color: var(--accent-light); text-decoration: none; font-weight: 500; font-size: 0.9rem; }
+.actionLink:hover { text-decoration: underline; }
+.deleteBtn {
+  background: none; border: none; color: var(--error); cursor: pointer;
+  font-size: 0.9rem; padding: 0;
+}
+.empty { text-align: center; color: var(--text-muted); padding: 3rem; }
+
+/* Form specific */
+.menuForm { background: var(--bg-card); padding: 2rem; border: 1px solid var(--border-color); }
+.formGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.5rem; }
+.formGroup { display: flex; flex-direction: column; gap: 0.4rem; }
+.formGroupFullWidth { grid-column: 1 / -1; }
+.label { font-size: 0.85rem; font-weight: 500; color: var(--text-secondary); }
+.required { color: var(--error); }
+.input, .select, .textarea {
+  padding: 0.625rem; border: 1px solid var(--border-color); background: var(--bg-secondary);
+  color: var(--text-primary); font-size: 0.95rem; font-family: inherit;
+}
+.input:focus, .select:focus, .textarea:focus { outline: none; border-color: var(--accent-light); box-shadow: 0 0 8px var(--accent-glow); }
+.formActions { display: flex; justify-content: flex-end; gap: 0.75rem; }
+.cancelButton {
+  padding: 0.625rem 1.25rem; border: 1px solid var(--border-color);
+  text-decoration: none; color: var(--text-secondary); font-weight: 500; background: transparent;
+}
+.submitButton {
+  padding: 0.625rem 1.25rem; background: var(--accent); color: white;
+  border: 1px solid var(--accent); cursor: pointer; font-weight: 500; font-size: 0.95rem;
+  transition: all var(--transition);
+}
+.submitButton:hover { background: var(--accent-light); box-shadow: 0 0 12px var(--accent-glow); }

@@ -1,0 +1,113 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// 管理者（サロンオーナー）
+model Admin {
+  id           String   @id @default(uuid())
+  username     String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+// 顧客
+model Customer {
+  id             String        @id @default(uuid())
+  name           String
+  nameKana       String?
+  phone          String?
+  email          String?       @unique
+  lineName       String?
+  instagramName  String?
+  birthday       DateTime?
+  firstVisitAt   DateTime?
+  lastVisitAt    DateTime?
+  visitCount     Int           @default(0)
+  notes          String?       // 注意事項メモ
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  reservations   Reservation[]
+  visitHistories VisitHistory[]
+}
+
+// メニュー
+model Menu {
+  id              String        @id @default(uuid())
+  name            String
+  price           Int
+  durationMinutes Int
+  description     String?
+  isPublic        Boolean       @default(true)
+  targetType      String        @default("all") // "all", "new", "repeat"
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  reservations    Reservation[]
+}
+
+// 予約
+model Reservation {
+  id             String         @id @default(uuid())
+  customer       Customer       @relation(fields: [customerId], references: [id])
+  customerId     String
+  menu           Menu           @relation(fields: [menuId], references: [id])
+  menuId         String
+  startAt        DateTime
+  endAt          DateTime
+  status         String         @default("reserved") // reserved, visited, cancelled, no_show
+  source         String         @default("web")      // web, manual
+  memo           String?
+  cancelToken    String?        @unique
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  visitHistories VisitHistory[]
+  notifications  Notification[]
+}
+
+// 営業時間・定休日設定 (曜日ごと)
+model BusinessHour {
+  id        String  @id @default(uuid())
+  weekday   Int     // 0=Sun, 1=Mon...
+  openTime  String  // "09:00"
+  closeTime String  // "20:00"
+  isClosed  Boolean @default(false)
+}
+
+// 特定日の特別設定（臨時休業、特別営業時間）
+model Holiday {
+  id          String   @id @default(uuid())
+  holidayDate DateTime @unique
+  isClosed    Boolean  @default(true)
+  openTime    String?  // null if isClosed
+  closeTime   String?  // null if isClosed
+  note        String?
+}
+
+// 来店・施術履歴
+model VisitHistory {
+  id            String      @id @default(uuid())
+  customer      Customer    @relation(fields: [customerId], references: [id])
+  customerId    String
+  reservation   Reservation? @relation(fields: [reservationId], references: [id])
+  reservationId String?
+  menuSnapshot  String      // 予約時のメニュー内容のスナップショット
+  priceSnapshot Int
+  stylistNote   String?
+  visitedAt     DateTime
+  createdAt     DateTime    @default(now())
+}
+
+// 通知履歴
+model Notification {
+  id            String      @id @default(uuid())
+  reservation   Reservation @relation(fields: [reservationId], references: [id])
+  reservationId String
+  type          String      // created, cancelled, reminded, changed
+  channel       String      @default("email")
+  sentAt        DateTime    @default(now())
+  status        String      // success, failed
+}

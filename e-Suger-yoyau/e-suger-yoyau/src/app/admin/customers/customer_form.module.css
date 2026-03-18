@@ -1,0 +1,31 @@
+.title { font-family: var(--font-serif); font-size: 1.75rem; font-weight: 600; margin: 0 0 1.5rem; letter-spacing: 0.08em; }
+.customerForm {
+  background: var(--bg-card); padding: 2rem;
+  border: 1px solid var(--border-color);
+}
+.formGrid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+.formGroup { display: flex; flex-direction: column; gap: 0.4rem; }
+.formGroupFullWidth { grid-column: 1 / -1; }
+.label { font-size: 0.85rem; font-weight: 500; color: var(--text-secondary); }
+.required { color: var(--error); }
+.input, .textarea {
+  padding: 0.625rem; border: 1px solid var(--border-color); background: var(--bg-secondary);
+  color: var(--text-primary); font-size: 0.95rem; font-family: inherit;
+}
+.input:focus, .textarea:focus {
+  outline: none; border-color: var(--accent-light); box-shadow: 0 0 8px var(--accent-glow);
+}
+.formActions { display: flex; justify-content: flex-end; gap: 0.75rem; }
+.cancelButton {
+  padding: 0.625rem 1.25rem; border: 1px solid var(--border-color);
+  text-decoration: none; color: var(--text-secondary); font-weight: 500; background: transparent;
+}
+.submitButton {
+  padding: 0.625rem 1.25rem; background: var(--accent); color: white;
+  border: 1px solid var(--accent); cursor: pointer; font-weight: 500;
+  font-size: 0.95rem; transition: all var(--transition);
+}
+.submitButton:hover { background: var(--accent-light); box-shadow: 0 0 12px var(--accent-glow); }
