@@ -11,7 +11,7 @@ export const metadata = {
 
 export default function ContactPage() {
     const adminTwitterId = process.env.NEXT_PUBLIC_ADMIN_TWITTER_ID || 'vrc_workers';
-    const twitterUrl = `https://x.com/${adminTwitterId.replace('@', '')}`;
+    const twitterUrl = `https://x.com/${adminTwitterId.replace(/^@/, '')}`;
 
     return (
         <>

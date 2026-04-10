@@ -52,7 +52,7 @@ export default function AboutPage() {
                         </div>
                         <div className={styles.adminInfo}>
                             <span className={styles.adminName}>管理者: {adminName}</span>
-                            <a href={`https://x.com/${adminTwitterId.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className={styles.link}>
+                            <a href={`https://x.com/${adminTwitterId.replace(/^@/, '')}`} target="_blank" rel="noopener noreferrer" className={styles.link}>
                                 X (Twitter): {adminTwitterId.startsWith('@') ? adminTwitterId : `@${adminTwitterId}`}
                             </a>
                         </div>
