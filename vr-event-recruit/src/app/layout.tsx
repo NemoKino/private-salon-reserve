@@ -24,6 +24,11 @@ export const metadata: Metadata = {
     description: 'VRChat (VRC) イベントのキャスト募集掲示板。ログイン不要。様々なジャンルのイベントを掲載中。',
     images: ['/images/sample-club-hero.jpg'],
   },
+  icons: {
+    icon: '/icon.png',
+    shortcut: '/favicon.ico',
+    apple: '/icon.png',
+  },
 };
 
 export default function RootLayout({
